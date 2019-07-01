@@ -1,4 +1,4 @@
-## All CHSI data is stored in this folder.
+All CHSI data is stored in this folder.
 
 # Community Health Status Indicators (CHSI) to Combat Obesity, Heart Disease and Cancer
 > Metadata Updated: June 3, 2019
