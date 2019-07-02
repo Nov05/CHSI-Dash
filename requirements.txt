@@ -16,6 +16,7 @@ dash==1.0.0
 decorator==4.4.0
 flask-compress==1.4.0
 flask==1.0.3
+gunicorn==19.9.0
 idna==2.8
 importlib-metadata==0.18
 ipython-genutils==0.2.0
