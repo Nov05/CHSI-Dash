@@ -7,6 +7,10 @@ verify_ssl = true
 
 [packages]
 plotly-express = "*"
+jupyter = "*"
+geopandas = "==0.3.0"
+pyshp = "==1.2.10"
+shapely = "==1.6.3"
 
 [requires]
 python_version = "3.6"
