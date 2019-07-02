@@ -4,22 +4,25 @@ import dash_core_components as dcc
 from dash.dependencies import Input, Output
 import plotly.figure_factory as ff
 import numpy as np
+
 # importing Dataset wrapper class
 from data.dataset import Dataset
 
 # Set style basics
 text_style = dict(color='#444', fontFamily='sans-serif', fontWeight=300)
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 colorscale = ["#f7fbff", "#ebf3fb", "#deebf7", "#d2e3f3", "#c6dbef", "#b3d2e9",
 			  "#9ecae1", "#85bcdb", "#6baed6", "#57a0ce", "#4292c6", "#3082be",
 			  "#2171b5", "#1361a9",	"#08519c", "#0b4083", "#08306b"]
 
 # starting plotly Dash server
 app = dash.Dash("CHSI Visualization")
+# need to extract the flask server out to hook to heroku
+server = app.server
 
-# preload the dataset and preprocess it.
+# preload the cause of death dataset and preprocess it.
 cod = Dataset('./data/LEADINGCAUSESOFDEATH.csv')
 cod.preproc()
+
 
 def plot_choropleth(df):
 	"""
@@ -42,13 +45,18 @@ def plot_choropleth(df):
     	binning_endpoints = endpts, colorscale = colorscale,
 		simplify_county=0, simplify_state=0, show_state_data = False,
     	show_hover = True, centroid_marker = {'opacity': 0},
+		county_outline={'color': 'rgb(244,24,244)', 'width': 0.5},
     	asp = 2.9,
     	title = 'Everything Is Bigger In Texas',
     	legend_title = '% Death'
 		)
 	return fig
 
-#choro_plot = plot_choropleth(test)
+"""
+This is the HTML layout of the Dash web app.  Setting default values of the plot
+to D, Wh, and Homicide. Only one choropleth graph. The graph is dynamically
+updated w/ @callback by function update_graph, id='choropleth'.
+"""
 app.layout = html.Div(children=[
 		html.H1("A Story of Life and Death", style=text_style),
 		html.P("CHSI Cause of Death Visualization, 1996-2003", style=text_style),
@@ -95,7 +103,8 @@ app.layout = html.Div(children=[
 	        	value='Homicide',
 				style=text_style
 	    	)], style={'columnCount': 3}),
-
+	    # The actual graph with id. This is dynimcally updated by update_graph
+		# with callback decorator.
 		dcc.Graph(id='choropleth')
 		])
 
@@ -110,6 +119,8 @@ def update_graph(age, ethnicities, cods):
 	the appropriate column, get the data slices with FIPS and feature column.
 	It then returns a choropleth figure by calling plot_choropleth.
 
+	NOTE: if NaN values are plotted, the mouseover data inpsection will not work
+
 	TODO: add logics to prevent accessing unavailable combinations of age group,
 	ethnicities, and causes of death. For example, age group B, C, D, E, F, has
 	no cause of death from Comp (Birth Complication) or BirthDef (Birth Defect)
@@ -122,7 +133,7 @@ def update_graph(age, ethnicities, cods):
 	"""
 	slices = cod.lookup(age, ethnicities, cods)#.dropna()
 	#print(slices.head())
-	tx_slices = slices[slices.FIPS.str.startswith("48")]
+	tx_slices = slices[slices.FIPS.str.startswith("48")].dropna()
 	return plot_choropleth(tx_slices)
 
 
