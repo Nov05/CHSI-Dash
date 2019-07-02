@@ -17,7 +17,7 @@ text_style = dict(color='#444', fontFamily='sans-serif', fontWeight=300)
 
 cod = Dataset('./data/LEADINGCAUSESOFDEATH.csv')
 cod.preproc()
-test = cod.lookup('A', 'Wh', 'Comp')
+test = cod.lookup('A', 'Wh', 'Comp').dropna()
 
 def plot_choropleth(df):
 	colorscale = ["#f7fbff", "#ebf3fb", "#deebf7", "#d2e3f3", "#c6dbef", "#b3d2e9", "#9ecae1",
@@ -30,7 +30,10 @@ def plot_choropleth(df):
 
 	fig = ff.create_choropleth(
     	fips = fips, values = values, scope = ['usa'],
-    	binning_endpoints = endpts, colorscale = colorscale,
+    	binning_endpoints = endpts,
+		colorscale = colorscale,
+		simplify_county=0,
+		simplify_state=0,
     	show_state_data = False,
     	show_hover = True, centroid_marker = {
         	'opacity': 0
