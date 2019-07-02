@@ -1,9 +1,10 @@
 """Dataset class for CHSI dataset that can be extended by dataset-specific classes."""
 from pathlib import Path
 import pandas as pd
+import numpy as np
 
 
-class Dataset(pd.DataFrame):
+class Dataset():
 
     def __init__(self, filename=None):
         """
@@ -19,6 +20,9 @@ class Dataset(pd.DataFrame):
 
     @classmethod
     def load_data(self, filename=None):
+        print(filename)
+        asdf = pd.read_csv(filename)
+        print(asdf.head())
         return pd.read_csv(filename)
 
     def preproc(self):
@@ -28,15 +32,15 @@ class Dataset(pd.DataFrame):
         np.nan according to DEFINEDDATAVALUE.csv. Also constructs the five digit
         FIPS code from State_FIPS_Code and County_FIPS_Code.
         """
-        cols = self._data.columns.values
+        cols = self.df.columns.values
         cols_drop = [c for c in cols if 'CI_' in c]
         self.df = self.df.drop(self.df[cols_drop], axis=1)
 
         self.df = self.df.replace([-1,-1111,-1111.1,-2,-2222.2,-2222,-9999,-9989.9],
                       [np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan])
 
-        self.df['FIPS'] = self.df['State_FIPS_Code'].apply(lambda x:str(x).zfill(2)) +
-                          self.df['County_FIPS_Code'].apply(lambda x:str(x).zfill(3))
+        self.df['FIPS'] = (self.df['State_FIPS_Code'].apply(lambda x:str(x).zfill(2)) +
+                        self.df['County_FIPS_Code'].apply(lambda x:str(x).zfill(3)))
         return None
 
     def lookup(self, age, race, cod) -> pd.DataFrame:
@@ -44,6 +48,6 @@ class Dataset(pd.DataFrame):
         Takes in age, race, cod as argument and returns a dataframe slice from
         the CHSI dataset with the FIPS column and feature column.
         """
-        feature_col = str(age)+'_'+str(race)+'_'+str_cod
+        feature_col = str(age)+'_'+str(race)+'_'+str(cod)
         print(feature_col)
         return self.df[['FIPS', feature_col]]
