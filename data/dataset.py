@@ -48,5 +48,5 @@ class Dataset():
         the CHSI dataset with the FIPS column and feature column.
         """
         feature_col = str(age)+'_'+str(race)+'_'+str(cod)
-        #print(feature_col)
+        print(feature_col)
         return self.df[['FIPS', feature_col]]
