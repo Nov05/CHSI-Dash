@@ -3,7 +3,7 @@ import dash
 import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output
-
+import plotly_express as px
 
 # starting flask server
 server = Flask("CHSI Dash App")
@@ -16,7 +16,7 @@ plotly_figure = dict(data=[dict(x=[1,2,3], y=[2,4,8])])
 
 app.layout = html.Div([
 		html.H2("DASH APP", style=text_style),
-		html.P("ASDFSDFSDJFKSL", style=text_style),
+		html.P("No idea what this is", style=text_style),
 		dcc.Input(id='text1', placeholder='box', value=''),
 		dcc.Graph(id='plot1', figure=plotly_figure),
 		])
