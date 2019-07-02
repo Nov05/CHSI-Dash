@@ -39,7 +39,7 @@ def plot_choropleth(df):
     	title = 'USA by A_Wh_Comp',
     	legend_title = 'A_Wh_Comp'
 		)
-	py.iplot(fig, filename = 'choropleth_full_usa')
+	#py.iplot(fig, filename = 'choropleth_full_usa')
 	return fig
 
 choro_plot = plot_choropleth(test)

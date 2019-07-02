@@ -39,7 +39,7 @@ class Dataset():
         self.df.County_FIPS_Code = self.df.County_FIPS_Code.apply(lambda x:str(int(x)).zfill(3))
 
         self.df['FIPS'] = self.df.State_FIPS_Code + self.df.County_FIPS_Code
-        print(self.df[self.df['FIPS'].str.contains("2280")])
+        #print(self.df[self.df['FIPS'].str.contains("2280")])
         #print(self.df.FIPS)#self.df.FIPS.astype('int').describe())
 
     def lookup(self, age, race, cod) -> pd.DataFrame:
