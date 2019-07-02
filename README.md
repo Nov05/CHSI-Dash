@@ -1,6 +1,6 @@
 # CHSI-Dash
 To run a local development server, at root root directory:
-```[pipenv run] python app/app.py```
+```[pipenv run] python app.py```
 
 To deploy on Heroku, git add and commit, then do:
 ```git push heroku master```
