@@ -64,12 +64,12 @@ app.layout = html.Div([
 	html.Div([
 		html.H1("A Story of Life and Death", style=text_style),
 		html.H4("CHSI Cause of Death Visualization, 1996-2003", style=text_style)
-	]),
+	], className="twelve columns"),
 
 	# dropdown grid
 	html.Div([
 		html.Div([
-			html.Div('Age Group', style=text_style),
+			html.Div('Age Group', style=text_style, className='four columns'),
 			html.Div(dcc.Dropdown(
 				id='ages',
 				options=[
@@ -82,9 +82,9 @@ app.layout = html.Div([
 	        	],
 				multi=False, clearable=False, searchable=False,
 	        	value='D'
-	    	), className='six columns')]),
+	    	), className='four columns')]),
 		html.Div([
-			html.Div('Ethnic Group', style=text_style),
+			html.Div('Ethnic Group', style=text_style, className='four columns'),
 			html.Div(dcc.Dropdown(
 				id='ethnicities',
 				options=[
@@ -95,9 +95,9 @@ app.layout = html.Div([
 				],
 				multi=False, clearable=False, searchable=False,
 	        	value='Wh'
-	    	), className='six columns')]),
+	    	), className='four columns')]),
 		html.Div([
-			html.Div('Cause of Death', style=text_style),
+			html.Div('Cause of Death', style=text_style, className='four columns'),
 			html.Div(dcc.Dropdown(
 				id='cods',
 				options=[
@@ -112,10 +112,10 @@ app.layout = html.Div([
 	        	],
 				multi=False, clearable=False, searchable=False,
 	        	value='Homicide'
-    		), className='six columns')]),
+    		), className='four columns')])#,
 
-		html.Div(className='six columns')
-	],  className='six columns'),
+		#html.Div(className='three columns')
+	],  className='twelve columns'),
 
     # The actual graph with id. This is dynimcally updated by update_graph
 	# with callback decorator.
@@ -125,14 +125,14 @@ app.layout = html.Div([
 			], className='six columns'),
 		# reserve space for second plot
 		html.Div(className='six columns')
-	], className='six columns')
+	], className='twelve columns')
 ])
 
 @app.callback(Output('choropleth', 'figure'),
  			 [Input('ages', 'value'),
 			  Input('ethnicities', 'value'),
 			  Input('cods', 'value')])
-def update_graph(age, ethnicities, cods):
+def update_choro(age, ethnicities, cods):
 	"""
 	This is the callback function that dynamically adjusts the choropleth by
 	taking inputs from the dropdown menus, calling the Dataset class to lookup
