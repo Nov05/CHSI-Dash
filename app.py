@@ -14,8 +14,10 @@ colorscale = ["#f7fbff", "#ebf3fb", "#deebf7", "#d2e3f3", "#c6dbef", "#b3d2e9",
 			  "#9ecae1", "#85bcdb", "#6baed6", "#57a0ce", "#4292c6", "#3082be",
 			  "#2171b5", "#1361a9",	"#08519c", "#0b4083", "#08306b"]
 
-# starting plotly Dash server
+# starting plotly Dash server and add css style sheet found randomly online
 app = dash.Dash("CHSI Visualization")
+app.css.append_css({'external_url': 'https://codepen.io/plotly/pen/EQZeaW.css'})
+
 # need to extract the flask server out to hook to heroku
 server = app.server
 
@@ -53,27 +55,28 @@ def plot_choropleth(df):
 	return fig
 
 """
-This is the HTML layout of the Dash web app.  Setting default values of the plot
-to D, Wh, and Homicide. Only one choropleth graph. The graph is dynamically
-updated w/ @callback by function update_graph, id='choropleth'.
+App layout.  Setting default values of the plot to D, Wh, and Homicide. Only one
+choropleth graph. The graph is dynamically updated w/ @callback by function
+update_graph, id='choropleth'.
 """
 app.layout = html.Div(children=[
 		html.H1("A Story of Life and Death", style=text_style),
-		html.P("CHSI Cause of Death Visualization, 1996-2003", style=text_style),
+		html.H3("CHSI Cause of Death Visualization, 1996-2003", style=text_style),
 		html.Div(children=[
 			html.Label('Age Group', style=text_style),
 			dcc.Dropdown(
 				id='ages',
 				options=[
-	            {'label': 'Under 1 Years Old', 'value': 'A'},
-	            {'label': '1 - 14 Years Old', 'value': 'B'},
-	            {'label': '15 - 24 Years Old', 'value': 'C'},
-				{'label': '25 - 44 Years Old', 'value': 'D'},
-				{'label': '44 - 64 Years Old', 'value': 'E'},
-				{'label': '65+ Years Old', 'value': 'F'}
+	            {'label': "Under 1 Years Old", 'value': 'A'},
+	            {'label': "1 - 14 Years Old", 'value': 'B'},
+	            {'label': "15 - 24 Years Old", 'value': 'C'},
+				{'label': "25 - 44 Years Old", 'value': 'D'},
+				{'label': "44 - 64 Years Old", 'value': 'E'},
+				{'label': "65+ Years Old", 'value': 'F'}
 	        	],
-	        	value='D',
-				style=text_style
+				multi=False, clearable=False, searchable=False,
+	        	value='D'#,
+				#style={'width':'32%','display':'inline-block', 'margin':'10px'}#text_style
 	    	),
 			html.Label('Ethnic Group', style=text_style),
 			dcc.Dropdown(
@@ -84,25 +87,25 @@ app.layout = html.Div(children=[
 	            {'label': 'Hispanic', 'value': 'Hi'},
 				{'label': 'Other', 'value': 'Ot'},
 				],
-	        	value='Wh',
-				style=text_style
+				multi=False, clearable=False, searchable=False,
+	        	value='Wh'
 	    	),
-			html.Label('Age Group', style=text_style),
+			html.Label('Cause of Death', style=text_style),
 			dcc.Dropdown(
 				id='cods',
 				options=[
-	            {'label': 'Birth Complication', 'value': 'Comp'},
-	            {'label': 'Birth Defect', 'value': 'BirthDef'},
-				{'label': 'Injury', 'value': 'Injury'},
-	            {'label': 'Suicide', 'value': 'Suicide'},
-	            {'label': 'Cancer', 'value': 'Cancer'},
-				{'label': 'Homicide', 'value': 'Homicide'},
-				{'label': 'Heart Diseases', 'value': 'HeartDis'},
-				{'label': 'HIV', 'value': 'HIV'}
+	            {'label': "Birth Complication", 'value': 'Comp'},
+	            {'label': "Birth Defect", 'value': 'BirthDef'},
+				{'label': "Injury", 'value': 'Injury'},
+	            {'label': "Suicide", 'value': 'Suicide'},
+	            {'label': "Cancer", 'value': 'Cancer'},
+				{'label': "Homicide", 'value': 'Homicide'},
+				{'label': "Heart Diseases", 'value': 'HeartDis'},
+				{'label': "HIV", 'value': 'HIV'}
 	        	],
-	        	value='Homicide',
-				style=text_style
-	    	)], style={'columnCount': 3}),
+				multi=False, clearable=False, searchable=False,
+	        	value='Homicide'
+	    	)],  style={'columnCount': 3}),
 	    # The actual graph with id. This is dynimcally updated by update_graph
 		# with callback decorator.
 		dcc.Graph(id='choropleth')
@@ -120,6 +123,7 @@ def update_graph(age, ethnicities, cods):
 	It then returns a choropleth figure by calling plot_choropleth.
 
 	NOTE: if NaN values are plotted, the mouseover data inpsection will not work
+	Instead, fillna with 0 so every polygon is plotted.
 
 	TODO: add logics to prevent accessing unavailable combinations of age group,
 	ethnicities, and causes of death. For example, age group B, C, D, E, F, has
@@ -131,9 +135,13 @@ def update_graph(age, ethnicities, cods):
 	ethnicities: ethnicities
 	cods: causes of death
 	"""
-	slices = cod.lookup(age, ethnicities, cods)#.dropna()
-	#print(slices.head())
-	tx_slices = slices[slices.FIPS.str.startswith("48")].dropna()
+	if cod.isin_cols(age, ethnicities, cods):
+		slices = cod.lookup(age, ethnicities, cods)
+	else:
+		# if age/ethnicities/cods combination dont exist, plot default graph.
+		slices = cod.lookup('D', 'Wh', 'Homicide')
+
+	tx_slices = slices[slices.FIPS.str.startswith("48")].fillna(0)
 	return plot_choropleth(tx_slices)
 
 

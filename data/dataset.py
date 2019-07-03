@@ -50,3 +50,13 @@ class Dataset():
         feature_col = str(age)+'_'+str(race)+'_'+str(cod)
         print(feature_col)
         return self.df[['FIPS', feature_col]]
+
+    def isin_cols(self, age, race, cod):
+        """
+        Takes in age, race, cod as argument and returns a boolean value that
+        flags if the age, race, cod combination exists in the dataframe.
+        """
+        feature_col = str(age)+'_'+str(race)+'_'+str(cod)
+        cols = self.df.columns.values
+        #print(feature_col)
+        return feature_col in cols
