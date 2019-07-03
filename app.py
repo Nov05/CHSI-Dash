@@ -65,7 +65,7 @@ update_graph, id='choropleth'.
 app.layout = html.Div([
 	html.Link(
         rel='stylesheet',
-        href='EQZeaW.css'
+        href='stylesheet.css'
     ),
 	# header
 	html.Div([
@@ -122,7 +122,7 @@ app.layout = html.Div([
     		), className='four columns')])#,
 
 		#html.Div(className='three columns')
-	],  className='six columns dropdown'),
+	],  className='twelve columns dropdown'),
 
     # The actual graph with id. This is dynimcally updated by update_graph
 	# with callback decorator.
