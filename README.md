@@ -1,4 +1,7 @@
 # CHSI-Dash
+
+https://tragically-eh-20397.herokuapp.com/
+
 To run a local development server, at root root directory:
 ```[pipenv run] python app.py```
 
