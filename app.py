@@ -16,7 +16,10 @@ colorscale = ["#f7fbff", "#ebf3fb", "#deebf7", "#d2e3f3", "#c6dbef", "#b3d2e9",
 
 # starting plotly Dash server and add css style sheet found randomly online
 app = dash.Dash("CHSI Visualization")
-app.css.append_css({'external_url': 'https://codepen.io/plotly/pen/EQZeaW.css'})
+app.css.config.serve_locally = True
+#app.css.append_css({'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'})
+#https://codepen.io/chriddyp/pen/bWLwgP.css
+#{'external_url': 'https://codepen.io/plotly/pen/EQZeaW.css'})
 
 # need to extract the flask server out to hook to heroku
 server = app.server
@@ -60,6 +63,10 @@ choropleth graph. The graph is dynamically updated w/ @callback by function
 update_graph, id='choropleth'.
 """
 app.layout = html.Div([
+	html.Link(
+        rel='stylesheet',
+        href='EQZeaW.css'
+    ),
 	# header
 	html.Div([
 		html.H1("A Story of Life and Death", style=text_style),
@@ -115,7 +122,7 @@ app.layout = html.Div([
     		), className='four columns')])#,
 
 		#html.Div(className='three columns')
-	],  className='twelve columns'),
+	],  className='six columns dropdown'),
 
     # The actual graph with id. This is dynimcally updated by update_graph
 	# with callback decorator.
