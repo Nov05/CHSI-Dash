@@ -3,31 +3,162 @@ import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output
 import plotly.figure_factory as ff
+import plotly.graph_objs as go
+import pandas as pd
 import numpy as np
 
 # importing Dataset wrapper class
 from data.dataset import Dataset
 
-# Set style basics
-text_style = dict(color='#444', fontFamily='sans-serif', fontWeight=300)
-colorscale = ["#f7fbff", "#ebf3fb", "#deebf7", "#d2e3f3", "#c6dbef", "#b3d2e9",
-			  "#9ecae1", "#85bcdb", "#6baed6", "#57a0ce", "#4292c6", "#3082be",
-			  "#2171b5", "#1361a9",	"#08519c", "#0b4083", "#08306b"]
 
-# starting plotly Dash server and add css style sheet found randomly online
-app = dash.Dash("CHSI Visualization")
-app.css.config.serve_locally = True
-#app.css.append_css({'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'})
-#https://codepen.io/chriddyp/pen/bWLwgP.css
-#{'external_url': 'https://codepen.io/plotly/pen/EQZeaW.css'})
-
-# need to extract the flask server out to hook to heroku
-server = app.server
-
-# preload the cause of death dataset and preprocess it.
+# preload the cause of death and demographics dataset and preprocess it.
 cod = Dataset('./data/LEADINGCAUSESOFDEATH.csv')
 cod.preproc()
+demogr = pd.read_csv('./data/DEMOGRAPHICS.csv')
 
+#########################################################################
+# 3D Scatter
+#########################################################################
+
+def display_fig(in_age='A', in_slice=0, in_range=0):
+	colorscales = ["Greens", "YlOrRd", "Bluered", "RdBu", "Reds",
+               	   "Blues", "Picnic", "Rainbow", "Portland", "Jet",
+               	   "Hot", "Blackbody", "Earth", "Electric", "Viridis",
+               	   "Cividis"]
+
+	cols = demogr.columns.tolist()
+	# age
+	if in_age=='A' or in_age=='B' or in_age=='C':
+		y = demogr[cols[17]]
+		titley = "y = Age Under 19"
+	elif in_age=='D' or in_age=='E':
+		y = demogr[cols[20]]
+		titley = "y = Age 19-64"
+	elif in_age=='F':
+	    y = demogr[cols[23]] + demogr[cols[26]]
+	    titley = "y = Age Above 64"
+
+	# log10(population density), poverty
+	x = np.log10(demogr[cols[11]].replace([-2222,0], [demogr[cols[11]].mean(),1]))
+	z = demogr[cols[14]].replace(-2222.2, demogr[cols[14]].mean())
+	d = np.log10(demogr[cols[8]]) # log10(population)
+
+	##############
+	if in_slice == 0:
+	##############
+		trace1 = go.Scatter3d(
+			x=x,
+			y=y,
+			z=z,
+			mode='markers',
+			marker=dict(
+				size=d*2,
+				color=z,                     # set color to an array/list of desired values
+				colorscale=colorscales[8],   # choose a colorscale
+				opacity=1,
+				showscale=True,
+				colorbar=dict(x=0.81, len=0.5,
+							  thickness=10,
+							  outlinecolor='white', outlinewidth=0,
+							  title=dict(text="Poverty", font=dict(size=10))
+							  ),
+				 line=dict(width=0.001, color='black')
+			),
+	        text='County Level',
+			projection=dict(x=dict(show=True, opacity=0.1, scale=0.4),
+							y=dict(show=True, opacity=0.1, scale=0.4),
+							z=dict(show=True, opacity=0.1, scale=0.4),
+							)
+		)
+		data = [trace1]
+	##############
+	else:
+	##############
+	    # slicing data
+	    if in_range<0 or in_range>41:
+	    	in_range=0
+	    slicenum = 41
+	    slices = np.linspace(0, 41, slicenum)
+	    condition = ((z >= slices[in_range]) & (z < slices[in_range+1]))
+	    x1 = x[condition]
+	    y1 = y[condition]
+	    z1 = [slices[in_range]] * len(x1)
+
+	    # creating a plane
+	    p1 = np.linspace(0, max(x), 5)
+	    p2 = np.linspace(0, max(y), 5)
+	    p1, p2 = np.meshgrid(p1, p2)
+	    p3 = [[slices[in_range]] * 5] * 5
+
+	    trace1 = go.Scatter3d(
+		    x=x,
+	    	y=y,
+	    	z=z,
+	    	mode='markers',
+	    	name='county',
+			marker=dict(
+	        	size=d*2,
+	        	color="black",
+	        	opacity=0.01,
+	        	line=dict(width=0.00, color='black'),
+	        	),
+	        	showlegend=False,
+	    )
+	    trace2 = go.Surface(
+	        x=tuple(p1),
+	        y=tuple(p2),
+	        z=tuple(p3),
+	        name='slice',
+	        opacity=0.5,
+	        showlegend=False,
+	        showscale=False,
+	    )
+	    trace3 = go.Scatter3d(
+	        x=x1,
+	        y=y1,
+	        z=z1,
+	        name='Poverty',
+	        mode='markers',
+	        marker=dict(
+	            size=d*2,
+	            color=z, # set color to an array/list of desired values
+	            colorscale=colorscales[8], # choose a colorscale
+	            opacity=1,
+	            showscale=True,
+	            colorbar=dict(x=0.81, len=0.5,
+	                          thickness=10,
+	                          outlinecolor='white', outlinewidth=0,
+	                          title=dict(text="Poverty\nLevel", font=dict(size=10))
+	                         ),
+	            line=dict(width=0.01, color='gray')
+	        ),
+	        projection=dict(x=dict(show=True, opacity=0.05, scale=0.5),
+	                        y=dict(show=True, opacity=0.05, scale=0.5),
+	                        z=dict(show=True, opacity=0.05, scale=0.5),
+	                       ),
+	        showlegend=False,
+	    )
+	    data = [trace1, trace2, trace3]
+		##############
+		# end of if-else
+		##############
+
+	layout = go.Layout(
+    	autosize=False,
+    	width=700,
+    	height=600,
+    	margin=dict(
+        	l=0,
+	        r=0,
+        	b=0,
+        	t=0
+		),
+		scene=dict(xaxis=dict(title="x = Population Density (lg)"),
+                   yaxis=dict(title=titley),
+                   zaxis=dict(title="z = Poverty"),),
+	)
+	fig = go.Figure(data=data, layout=layout)
+	return fig
 
 def plot_choropleth(df):
 	"""
@@ -41,6 +172,11 @@ def plot_choropleth(df):
 	    geoencoding. Second column is the features to be plotted, base on a
 		combination of age, ethnicity, and cause of death.
 	"""
+	colorscale = ["#f7fbff", "#ebf3fb", "#deebf7", "#d2e3f3", "#c6dbef", "#b3d2e9",
+				  "#9ecae1", "#85bcdb", "#6baed6", "#57a0ce", "#4292c6", "#3082be",
+				  "#2171b5", "#1361a9",	"#08519c", "#0b4083", "#08306b"]
+
+
 	fips = df.FIPS.tolist()
 	values = df.iloc[:,1].tolist()
 	endpts = list(np.linspace(1, 100, len(colorscale)-1))
@@ -62,78 +198,119 @@ App layout.  Setting default values of the plot to D, Wh, and Homicide. Only one
 choropleth graph. The graph is dynamically updated w/ @callback by function
 update_graph, id='choropleth'.
 """
+# starting plotly Dash server and add bootstrap css style sheet
+app = dash.Dash("CHSI Visualization")
+server = app.server
+#app.config['suppress_callback_exceptions']=True
+
+# Set style basics
+#app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
+#app.css.append_css({'external_url':'https://codepen.io/leehanchung/pen/EBRXzB.css'})
+text_style = dict(color='#444', fontFamily='sans-serif', fontWeight=300)
+
+"""
+Interactive options
+"""
+options_radio1 = [
+  {'label': 'All Data', 'value': 0},
+  {'label': 'Sliced Data', 'value': 1},
+]
+options_dropdown1 = [
+  {'label': "Under 1 Years Old", 'value': 'A'},
+  {'label': "1 - 14 Years Old", 'value': 'B'},
+  {'label': "15 - 24 Years Old", 'value': 'C'},
+  {'label': "25 - 44 Years Old", 'value': 'D'},
+  {'label': "44 - 64 Years Old", 'value': 'E'},
+  {'label': "65+ Years Old", 'value': 'F'}
+]
+options_dropdown2 = [
+{'label': 'White', 'value': 'Wh'},
+{'label': 'Black', 'value': 'Bl'},
+{'label': 'Hispanic', 'value': 'Hi'},
+{'label': 'Other', 'value': 'Ot'},
+]
+options_dropdown3=[
+{'label': "Birth Complication", 'value': 'Comp'},
+{'label': "Birth Defect", 'value': 'BirthDef'},
+{'label': "Injury", 'value': 'Injury'},
+{'label': "Suicide", 'value': 'Suicide'},
+{'label': "Cancer", 'value': 'Cancer'},
+{'label': "Homicide", 'value': 'Homicide'},
+{'label': "Heart Diseases", 'value': 'HeartDis'},
+{'label': "HIV", 'value': 'HIV'}
+]
+marks1 = {
+    0:"0", 10:"10", 20:"20", 30:"30"
+}
+
 app.layout = html.Div([
-	html.Link(
-        rel='stylesheet',
-        href='stylesheet.css'
-    ),
 	# header
-	html.Div([
-		html.H1("A Story of Life and Death", style=text_style),
-		html.H4("CHSI Cause of Death Visualization, 1996-2003", style=text_style)
-	], className="twelve columns"),
+	html.H1("A Story of Life and Death", style=text_style),
+	html.H4("CHSI Cause of Death and Demographics Visualization, 1996-2003"),
 
 	# dropdown grid
-	html.Div([
-		html.Div([
-			html.Div('Age Group', style=text_style, className='four columns'),
-			html.Div(dcc.Dropdown(
-				id='ages',
-				options=[
-	            {'label': "Under 1 Years Old", 'value': 'A'},
-	            {'label': "1 - 14 Years Old", 'value': 'B'},
-	            {'label': "15 - 24 Years Old", 'value': 'C'},
-				{'label': "25 - 44 Years Old", 'value': 'D'},
-				{'label': "44 - 64 Years Old", 'value': 'E'},
-				{'label': "65+ Years Old", 'value': 'F'}
-	        	],
-				multi=False, clearable=False, searchable=False,
-	        	value='D'
-	    	), className='four columns')]),
-		html.Div([
-			html.Div('Ethnic Group', style=text_style, className='four columns'),
-			html.Div(dcc.Dropdown(
-				id='ethnicities',
-				options=[
-	            {'label': 'White', 'value': 'Wh'},
-	            {'label': 'Black', 'value': 'Bl'},
-	            {'label': 'Hispanic', 'value': 'Hi'},
-				{'label': 'Other', 'value': 'Ot'},
-				],
-				multi=False, clearable=False, searchable=False,
-	        	value='Wh'
-	    	), className='four columns')]),
-		html.Div([
-			html.Div('Cause of Death', style=text_style, className='four columns'),
-			html.Div(dcc.Dropdown(
-				id='cods',
-				options=[
-	            {'label': "Birth Complication", 'value': 'Comp'},
-	            {'label': "Birth Defect", 'value': 'BirthDef'},
-				{'label': "Injury", 'value': 'Injury'},
-	            {'label': "Suicide", 'value': 'Suicide'},
-	            {'label': "Cancer", 'value': 'Cancer'},
-				{'label': "Homicide", 'value': 'Homicide'},
-				{'label': "Heart Diseases", 'value': 'HeartDis'},
-				{'label': "HIV", 'value': 'HIV'}
-	        	],
-				multi=False, clearable=False, searchable=False,
-	        	value='Homicide'
-    		), className='four columns')])#,
+	html.Div('Age Group'),
+	dcc.Dropdown(
+			id='ages',
+			options=options_dropdown1,
+			multi=False, clearable=False, searchable=False,
+        	value='D'
+    ),
+	html.Div('Ethnic Group'),
+	dcc.Dropdown(
+			id='ethnicities',
+			options=options_dropdown2,
+			multi=False, clearable=False, searchable=False,
+        	value='Wh'
+	),
+	html.Div('Cause of Death'),
+	dcc.Dropdown(
+			id='cods',
+			options=options_dropdown3,
+			multi=False, clearable=False, searchable=False,
+        	value='Homicide'
+	),
+	dcc.RadioItems(id='radio1',
+        options=options_radio1,
+        value=0,
+        labelStyle={'display': 'inline-block'},
+        style = {'fontSize': '15px',
+                 'padding-left': '20px'},
+    ),
+    html.Div(children='Slice Data by Poverty Level',
+    	style = {'fontSize': '15px',
+             	'padding-left': '20px'}
+    ),
+    html.Div(
+    	dcc.Slider(id="slider1",
+        	min=0,
+        	max=30,
+        	step=1,
+        	value=0,
+        	marks=marks1,
+        ),
+    	style={'height': '20px',
+           		'width': '20%',
+				'padding-left': '20px',
+				'display': 'inline-block'},
+    ),
+    html.Div(children='　',
+    	style = {'fontSize': '10px',
+         		 'padding-left': '20px'}
+    ),
+    dcc.Graph(id="scatter3d"),#, figure=fig),
 
-		#html.Div(className='three columns')
-	],  className='twelve columns dropdown'),
-
-    # The actual graph with id. This is dynimcally updated by update_graph
+    # The actual graphs with id. This is dynimcally updated by update_graph
 	# with callback decorator.
-	html.Div([
-		html.Div([
-			dcc.Graph(id='choropleth')
-			], className='six columns'),
-		# reserve space for second plot
-		html.Div(className='six columns')
-	], className='twelve columns')
+	dcc.Graph(id='choropleth')
 ])
+
+@app.callback(Output("scatter3d", "figure"), [Input("ages", "value"),
+                                          Input("radio1", "value"),
+                                          Input('slider1', "value"),
+                                         ])
+def update_3dscatter(input1, input2, input3):
+  return display_fig(in_age=input1, in_slice=input2, in_range=input3)
 
 @app.callback(Output('choropleth', 'figure'),
  			 [Input('ages', 'value'),
