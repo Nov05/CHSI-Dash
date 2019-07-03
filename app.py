@@ -59,12 +59,18 @@ App layout.  Setting default values of the plot to D, Wh, and Homicide. Only one
 choropleth graph. The graph is dynamically updated w/ @callback by function
 update_graph, id='choropleth'.
 """
-app.layout = html.Div(children=[
+app.layout = html.Div([
+	# header
+	html.Div([
 		html.H1("A Story of Life and Death", style=text_style),
-		html.H3("CHSI Cause of Death Visualization, 1996-2003", style=text_style),
-		html.Div(children=[
-			html.Label('Age Group', style=text_style),
-			dcc.Dropdown(
+		html.H4("CHSI Cause of Death Visualization, 1996-2003", style=text_style)
+	]),
+
+	# dropdown grid
+	html.Div([
+		html.Div([
+			html.Div('Age Group', style=text_style),
+			html.Div(dcc.Dropdown(
 				id='ages',
 				options=[
 	            {'label': "Under 1 Years Old", 'value': 'A'},
@@ -75,11 +81,11 @@ app.layout = html.Div(children=[
 				{'label': "65+ Years Old", 'value': 'F'}
 	        	],
 				multi=False, clearable=False, searchable=False,
-	        	value='D'#,
-				#style={'width':'32%','display':'inline-block', 'margin':'10px'}#text_style
-	    	),
-			html.Label('Ethnic Group', style=text_style),
-			dcc.Dropdown(
+	        	value='D'
+	    	), className='six columns')]),
+		html.Div([
+			html.Div('Ethnic Group', style=text_style),
+			html.Div(dcc.Dropdown(
 				id='ethnicities',
 				options=[
 	            {'label': 'White', 'value': 'Wh'},
@@ -89,9 +95,10 @@ app.layout = html.Div(children=[
 				],
 				multi=False, clearable=False, searchable=False,
 	        	value='Wh'
-	    	),
-			html.Label('Cause of Death', style=text_style),
-			dcc.Dropdown(
+	    	), className='six columns')]),
+		html.Div([
+			html.Div('Cause of Death', style=text_style),
+			html.Div(dcc.Dropdown(
 				id='cods',
 				options=[
 	            {'label': "Birth Complication", 'value': 'Comp'},
@@ -105,11 +112,21 @@ app.layout = html.Div(children=[
 	        	],
 				multi=False, clearable=False, searchable=False,
 	        	value='Homicide'
-	    	)],  style={'columnCount': 3}),
-	    # The actual graph with id. This is dynimcally updated by update_graph
-		# with callback decorator.
-		dcc.Graph(id='choropleth')
-		])
+    		), className='six columns')]),
+
+		html.Div(className='six columns')
+	],  className='six columns'),
+
+    # The actual graph with id. This is dynimcally updated by update_graph
+	# with callback decorator.
+	html.Div([
+		html.Div([
+			dcc.Graph(id='choropleth')
+			], className='six columns'),
+		# reserve space for second plot
+		html.Div(className='six columns')
+	], className='six columns')
+])
 
 @app.callback(Output('choropleth', 'figure'),
  			 [Input('ages', 'value'),
@@ -124,10 +141,6 @@ def update_graph(age, ethnicities, cods):
 
 	NOTE: if NaN values are plotted, the mouseover data inpsection will not work
 	Instead, fillna with 0 so every polygon is plotted.
-
-	TODO: add logics to prevent accessing unavailable combinations of age group,
-	ethnicities, and causes of death. For example, age group B, C, D, E, F, has
-	no cause of death from Comp (Birth Complication) or BirthDef (Birth Defect)
 
 	Parameters
 	----------
