@@ -13,7 +13,7 @@ To deploy on Heroku, git add and commit, then do:
 【**Plotly 3D Scatter**】   
 <img src="https://github.com/Nov05/CHSI-Dash/blob/master/pictures/ezgif.com-optimize.gif?raw=true" width=500>  
 
-Screen Recording
+Screen Recording  
 https://www.apowersoft.com/free-online-screen-recorder  
 Mp4 to Gif, Change Gif Speed, Compress Gif, etc.  
 https://ezgif.com/video-to-gif  
