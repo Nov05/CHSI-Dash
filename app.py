@@ -144,9 +144,9 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
 		##############
 
 	layout = go.Layout(
-    	autosize=False,
-    	width=700,
-    	height=600,
+    	autosize=True,
+    	width=600,
+    	height=500,
     	margin=dict(
         	l=0,
 	        r=0,
@@ -181,6 +181,24 @@ def plot_choropleth(df):
 	values = df.iloc[:,1].tolist()
 	endpts = list(np.linspace(1, 100, len(colorscale)-1))
 
+	annotations = [dict(
+		showarrow = False,
+		align = 'right',
+		text = '<b>Age-adjusted death rate<br>per county per year</b>',
+		x = 0.95,
+		y = 0.95,
+	)]
+
+	layout = go.Layout(
+		hovermode = 'closest',
+		margin = dict(r=0, l=0, t=0, b=0),
+		annotations = annotations,
+		dragmode = 'lasso',
+    	autosize=False,
+		height=200,
+    	width=400,
+	)
+
 	fig = ff.create_choropleth(
     	fips = fips, values = values, scope = ['Texas'],
     	binning_endpoints = endpts, colorscale = colorscale,
@@ -188,8 +206,8 @@ def plot_choropleth(df):
     	show_hover = True, centroid_marker = {'opacity': 0},
 		county_outline={'color': 'rgb(244,24,244)', 'width': 0.5},
     	asp = 2.9,
-    	title = 'Everything Is Bigger In Texas',
-    	legend_title = '% Death'
+    	legend_title = '% Death',
+		layout=layout
 		)
 	return fig
 
@@ -211,11 +229,11 @@ text_style = dict(color='#444', fontFamily='sans-serif', fontWeight=300)
 """
 Interactive options
 """
-options_radio1 = [
+slices_radio = [
   {'label': 'All Data', 'value': 0},
   {'label': 'Sliced Data', 'value': 1},
 ]
-options_dropdown1 = [
+ages_dropdown = [
   {'label': "Under 1 Years Old", 'value': 'A'},
   {'label': "1 - 14 Years Old", 'value': 'B'},
   {'label': "15 - 24 Years Old", 'value': 'C'},
@@ -223,92 +241,117 @@ options_dropdown1 = [
   {'label': "44 - 64 Years Old", 'value': 'E'},
   {'label': "65+ Years Old", 'value': 'F'}
 ]
-options_dropdown2 = [
-{'label': 'White', 'value': 'Wh'},
-{'label': 'Black', 'value': 'Bl'},
-{'label': 'Hispanic', 'value': 'Hi'},
-{'label': 'Other', 'value': 'Ot'},
+ethnicity_dropdown = [
+	{'label': 'White', 'value': 'Wh'},
+	{'label': 'Black', 'value': 'Bl'},
+	{'label': 'Hispanic', 'value': 'Hi'},
+	{'label': 'Other', 'value': 'Ot'},
 ]
-options_dropdown3=[
-{'label': "Birth Complication", 'value': 'Comp'},
-{'label': "Birth Defect", 'value': 'BirthDef'},
-{'label': "Injury", 'value': 'Injury'},
-{'label': "Suicide", 'value': 'Suicide'},
-{'label': "Cancer", 'value': 'Cancer'},
-{'label': "Homicide", 'value': 'Homicide'},
-{'label': "Heart Diseases", 'value': 'HeartDis'},
-{'label': "HIV", 'value': 'HIV'}
+causes_dropdown=[
+	{'label': "Birth Complication", 'value': 'Comp'},
+	{'label': "Birth Defect", 'value': 'BirthDef'},
+	{'label': "Injury", 'value': 'Injury'},
+	{'label': "Suicide", 'value': 'Suicide'},
+	{'label': "Cancer", 'value': 'Cancer'},
+	{'label': "Homicide", 'value': 'Homicide'},
+	{'label': "Heart Diseases", 'value': 'HeartDis'},
+	{'label': "HIV", 'value': 'HIV'}
 ]
 marks1 = {
     0:"0", 10:"10", 20:"20", 30:"30"
 }
 
 app.layout = html.Div([
-	# header
-	html.H1("A Story of Life and Death", style=text_style),
-	html.H4("CHSI Cause of Death and Demographics Visualization, 1996-2003"),
+	# Header Div. Leaving a Div for future spaces
+	html.Div([
+		html.Div([
+			html.H1("A Story of Life and Death",
+					style={'margin-bottom':'0rem', 'fontFamily':'sans-serif'}),#, 'display':'inline-block',}),#text_style),
+			html.H3("CHSI Cause of Death and Demographics Visualization, 1996-2003",
+					style={'margin-top':'0rem', 'fontFamily':'sans-serif'})
+		], style = {'width': '48%', 'display':'inline-block'}),
+		html.Div([
+			html.Img(src='assets/logo.png',
+					style = {'width': '80%', 'height': '40%',
+							'float':'right', 'position':'relative'})
+		], style = {'width': '48%', 'display':'inline-block'})
+	]),#, style = {'width': '100%'}),#, 'display':'inline-block'}),
 
-	# dropdown grid
-	html.Div('Age Group'),
-	dcc.Dropdown(
-			id='ages',
-			options=options_dropdown1,
-			multi=False, clearable=False, searchable=False,
-        	value='D'
-    ),
-	html.Div('Ethnic Group'),
-	dcc.Dropdown(
-			id='ethnicities',
-			options=options_dropdown2,
-			multi=False, clearable=False, searchable=False,
-        	value='Wh'
-	),
-	html.Div('Cause of Death'),
-	dcc.Dropdown(
-			id='cods',
-			options=options_dropdown3,
-			multi=False, clearable=False, searchable=False,
-        	value='Homicide'
-	),
-	dcc.RadioItems(id='radio1',
-        options=options_radio1,
-        value=0,
-        labelStyle={'display': 'inline-block'},
-        style = {'fontSize': '15px',
-                 'padding-left': '20px'},
-    ),
-    html.Div(children='Slice Data by Poverty Level',
-    	style = {'fontSize': '15px',
-             	'padding-left': '20px'}
-    ),
-    html.Div(
-    	dcc.Slider(id="slider1",
-        	min=0,
-        	max=30,
-        	step=1,
-        	value=0,
-        	marks=marks1,
-        ),
-    	style={'height': '20px',
-           		'width': '20%',
-				'padding-left': '20px',
-				'display': 'inline-block'},
-    ),
-    html.Div(children='　',
-    	style = {'fontSize': '10px',
-         		 'padding-left': '20px'}
-    ),
-    dcc.Graph(id="scatter3d"),#, figure=fig),
-
-    # The actual graphs with id. This is dynimcally updated by update_graph
-	# with callback decorator.
-	dcc.Graph(id='choropleth')
+	# All the menu item grdropdown grid
+	html.Div([
+		html.Div([
+			html.Div('Cause of Death'),
+			dcc.Dropdown(
+					id='cods',
+					options=causes_dropdown,
+					multi=False, clearable=False, searchable=False,
+					value='Homicide'
+			)
+		], style = {'width': '31%', 'display':'inline-block',
+					'fontSize': '15px', 'padding-right': '20px'}),
+		html.Div([
+			html.Div('Ethnic Group'),
+			dcc.Dropdown(
+					id='ethnicities',
+					options=ethnicity_dropdown,
+					multi=False, clearable=False, searchable=False,
+					value='Wh'
+			)
+		], style = {'width': '31%', 'display':'inline-block',
+					'fontSize': '15px', 'padding-right': '20px'}),
+		html.Div([
+			html.Div('Age Group'),
+			dcc.Dropdown(
+					id='ages',
+					options=ages_dropdown,
+					multi=False, clearable=False, searchable=False,
+					value='D'
+			)
+		], style = {'width': '31%', 'display':'inline-block',
+					'fontSize': '15px', 'padding-right': '20px'})
+	]),
+	html.Div([
+		html.Div([
+			dcc.Graph(id='choropleth')
+		], style = {'width': '48%', 'display':'inline-block'}),
+		html.Div([
+			dcc.Graph(id="scatter3d"),
+			dcc.RadioItems(id='radio1',
+		        options=slices_radio,
+		        value=0,
+		        labelStyle={'display': 'inline-block'},
+		        style = {'fontSize': '15px',
+		                 'padding-left': '40px'},
+		    ),
+		    html.Div(children='Slice Data by Poverty Level',
+		    	style = {'fontSize': '15px',
+		             	'padding-left': '40px'}
+		    ),
+		    html.Div(
+		    	dcc.Slider(id="slider1",
+		        	min=0,
+		        	max=30,
+		        	step=1,
+		        	value=0,
+		        	marks=marks1,
+		        ),
+		    	style={'height': '20px',
+		           		'width': '20%',
+						'padding-left': '40px',
+						'display': 'inline-block'},
+		    ),
+		    html.Div(children='　',
+		    	style = {'fontSize': '10px',
+		         		 'padding-left': '20px'}
+		    )
+		], style = {'width': '48%', 'display':'inline-block'})
+	], style = {'width': '100%'})#, 'display':'inline-block'})
 ])
 
-@app.callback(Output("scatter3d", "figure"), [Input("ages", "value"),
-                                          Input("radio1", "value"),
-                                          Input('slider1', "value"),
-                                         ])
+@app.callback(Output("scatter3d", "figure"),
+			 [Input("ages", "value"),
+              Input("radio1", "value"),
+              Input('slider1', "value")])
 def update_3dscatter(input1, input2, input3):
   return display_fig(in_age=input1, in_slice=input2, in_range=input3)
 
