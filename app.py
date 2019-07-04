@@ -144,6 +144,8 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
 		##############
 
 	layout = go.Layout(
+		plot_bgcolor='#F4F4F8',#colors['background'],
+		paper_bgcolor='#F4F4F8',#colors['background'],
     	autosize=True,
     	width=600,
     	height=500,
@@ -190,6 +192,8 @@ def plot_choropleth(df):
 	)]
 
 	layout = go.Layout(
+		plot_bgcolor='#F4F4F8',#colors['background'],
+		paper_bgcolor='#F4F4F8',#colors['background'],
 		hovermode = 'closest',
 		margin = dict(r=0, l=0, t=0, b=0),
 		annotations = annotations,
@@ -202,28 +206,31 @@ def plot_choropleth(df):
 	fig = ff.create_choropleth(
     	fips = fips, values = values, scope = ['Texas'],
     	binning_endpoints = endpts, colorscale = colorscale,
-		simplify_county=0, simplify_state=0, show_state_data = False,
+		simplify_county=0, simplify_state=0,
     	show_hover = True, centroid_marker = {'opacity': 0},
 		county_outline={'color': 'rgb(244,24,244)', 'width': 0.5},
     	asp = 2.9,
     	legend_title = '% Death',
-		layout=layout
+		layout=layout,
 		)
 	return fig
 
 """
-App layout.  Setting default values of the plot to D, Wh, and Homicide. Only one
+App layout. Have to use dash.Dash(__name__) and put css/js files in /assets
+folder according to https://dash.plot.ly/external-resources
+
+Setting default values of the plot to D, Wh, and Homicide. Only one
 choropleth graph. The graph is dynamically updated w/ @callback by function
 update_graph, id='choropleth'.
 """
 # starting plotly Dash server and add bootstrap css style sheet
-app = dash.Dash("CHSI Visualization")
+app = dash.Dash(__name__)
 server = app.server
-#app.config['suppress_callback_exceptions']=True
+app.config['suppress_callback_exceptions']=True
 
 # Set style basics
 #app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
-#app.css.append_css({'external_url':'https://codepen.io/leehanchung/pen/EBRXzB.css'})
+app.css.append_css({'external_url':'assets/stylesheet.css'})
 text_style = dict(color='#444', fontFamily='sans-serif', fontWeight=300)
 
 """
@@ -262,12 +269,12 @@ marks1 = {
 }
 
 app.layout = html.Div([
-	# Header Div. Leaving a Div for future spaces
+	# Header Div
 	html.Div([
 		html.Div([
-			html.H1("A Story of Life and Death",
+			html.H2("A Story of Life and Death",
 					style={'margin-bottom':'0rem', 'fontFamily':'sans-serif'}),#, 'display':'inline-block',}),#text_style),
-			html.H3("CHSI Cause of Death and Demographics Visualization, 1996-2003",
+			html.H6("Cause of Death and Demographics Visualization, 1996-2003",
 					style={'margin-top':'0rem', 'fontFamily':'sans-serif'})
 		], style = {'width': '48%', 'display':'inline-block'}),
 		html.Div([
@@ -277,7 +284,7 @@ app.layout = html.Div([
 		], style = {'width': '48%', 'display':'inline-block'})
 	]),#, style = {'width': '100%'}),#, 'display':'inline-block'}),
 
-	# All the menu item grdropdown grid
+	# All dropdown grid
 	html.Div([
 		html.Div([
 			html.Div('Cause of Death'),
@@ -288,7 +295,7 @@ app.layout = html.Div([
 					value='Homicide'
 			)
 		], style = {'width': '31%', 'display':'inline-block',
-					'fontSize': '15px', 'padding-right': '20px'}),
+					'fontSize': '13px', 'padding-right': '20px'}),
 		html.Div([
 			html.Div('Ethnic Group'),
 			dcc.Dropdown(
@@ -298,7 +305,7 @@ app.layout = html.Div([
 					value='Wh'
 			)
 		], style = {'width': '31%', 'display':'inline-block',
-					'fontSize': '15px', 'padding-right': '20px'}),
+					'fontSize': '13px', 'padding-right': '20px'}),
 		html.Div([
 			html.Div('Age Group'),
 			dcc.Dropdown(
@@ -308,25 +315,31 @@ app.layout = html.Div([
 					value='D'
 			)
 		], style = {'width': '31%', 'display':'inline-block',
-					'fontSize': '15px', 'padding-right': '20px'})
+					'fontSize': '13px', 'padding-right': '20px'})
 	]),
+
+	# plots grid and radio items.  left and right plots
 	html.Div([
+		# left plot
 		html.Div([
 			dcc.Graph(id='choropleth')
 		], style = {'width': '48%', 'display':'inline-block'}),
+		# right plot with radio items and slider
 		html.Div([
-			dcc.Graph(id="scatter3d"),
-			dcc.RadioItems(id='radio1',
-		        options=slices_radio,
-		        value=0,
-		        labelStyle={'display': 'inline-block'},
-		        style = {'fontSize': '15px',
-		                 'padding-left': '40px'},
-		    ),
-		    html.Div(children='Slice Data by Poverty Level',
-		    	style = {'fontSize': '15px',
-		             	'padding-left': '40px'}
-		    ),
+			html.Div([
+				dcc.Graph(id="scatter3d")
+			]),
+			html.Div([
+				dcc.RadioItems(id='radio1',
+			        options=slices_radio,
+			        value=0,
+			        labelStyle={'display': 'inline-block'},
+			        style = {'fontSize': '15px', 'padding-left': '40px'},
+			    ),
+			    html.Div(children='Slice Data by Poverty Level',
+			    	style = {'fontSize': '15px', 'padding-left': '40px'})
+			], style = {'fontSize': '10px',
+		         		 'padding-left': '20px'}),
 		    html.Div(
 		    	dcc.Slider(id="slider1",
 		        	min=0,
@@ -339,13 +352,10 @@ app.layout = html.Div([
 		           		'width': '20%',
 						'padding-left': '40px',
 						'display': 'inline-block'},
-		    ),
-		    html.Div(children='　',
-		    	style = {'fontSize': '10px',
-		         		 'padding-left': '20px'}
 		    )
-		], style = {'width': '48%', 'display':'inline-block'})
-	], style = {'width': '100%'})#, 'display':'inline-block'})
+		], style = {'width': '48%',
+					'display':'inline-block'})
+	], style = {'width': '98%', 'display':'inline-block'})
 ])
 
 @app.callback(Output("scatter3d", "figure"),
