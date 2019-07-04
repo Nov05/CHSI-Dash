@@ -8,22 +8,26 @@ https://tragically-eh-20397.herokuapp.com/
 [Centers for Disease Control and Prevention](https://catalog.data.gov/dataset/community-health-status-indicators-chsi-to-combat-obesity-heart-disease-and-cancer)  
 Metadata Updated: June 3, 2019  
 
-【**Deployment**】by @leehanchung  
+### :point_right: Teamwork
+:ok_hand:【**Deployment and Dash**】by @leehanchung  
 To run a local development server, at root root directory:  
 ```[pipenv run] python app.py```  
 To deploy on Heroku, git add and commit, then do:  
 ```git push heroku master```  
 
-2019-07-01 Dash visualization for CHSI dataset
+:ok_hand:【**Plotly Choropleth Map**】by @gyhou
 
-【**Plotly 3D Scatter**】by @nov05   
+:ok_hand:【**Plotly 3D Scatter**】by @nov05   
 <img src="https://github.com/Nov05/CHSI-Dash/blob/master/pictures/ezgif.com-optimize.gif?raw=true" width=500>  
 
-【**Screen Recording**】by @nov05
+:ok_hand:【**Screen Recording**】by @nov05  
 Screen Recording  
 https://www.apowersoft.com/free-online-screen-recorder  
 Mp4 to Gif, Change Gif Speed, Compress Gif, etc.  
 https://ezgif.com/video-to-gif  
+
+### :point_right: Project Logs
+2019-07-01 Dash visualization for CHSI dataset  
 
 
 
