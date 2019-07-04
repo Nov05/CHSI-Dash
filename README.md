@@ -8,7 +8,8 @@ https://tragically-eh-20397.herokuapp.com/
 [Centers for Disease Control and Prevention](https://catalog.data.gov/dataset/community-health-status-indicators-chsi-to-combat-obesity-heart-disease-and-cancer)  
 Metadata Updated: June 3, 2019  
 
-### :point_right: Teamwork
+### :point_right: Our Teamwork
+
 :ok_hand:【**Deployment and Dash**】by @leehanchung  
 To run a local development server, at root root directory:  
 ```[pipenv run] python app.py```  
@@ -18,7 +19,7 @@ To deploy on Heroku, git add and commit, then do:
 :ok_hand:【**Plotly Choropleth Map**】by @gyhou
 
 :ok_hand:【**Plotly 3D Scatter**】by @nov05   
-<img src="https://github.com/Nov05/CHSI-Dash/blob/master/pictures/ezgif.com-optimize.gif?raw=true" width=500>  
+<img src="https://github.com/Nov05/CHSI-Dash/blob/master/pictures/ezgif.com-optimize.gif?raw=true" width=300 align="middle">  
 
 :ok_hand:【**Screen Recording**】by @nov05  
 Screen Recording  
