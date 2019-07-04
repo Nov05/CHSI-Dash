@@ -2,7 +2,8 @@
 
 ### :point_right: Dash App deployed on Heroku 
 
-https://tragically-eh-20397.herokuapp.com/
+Dash visualization for CHSI dataset  
+https://tragically-eh-20397.herokuapp.com/  
 
 ### :point_right: Data Source
 
@@ -35,7 +36,7 @@ https://ezgif.com/video-to-gif
 
 ### :point_right: Project Logs
 
-2019-07-01 Dash visualization for CHSI dataset  
+2019-07-01 Project created  
 
 
 
