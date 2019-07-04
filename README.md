@@ -4,7 +4,7 @@
 
 ## :point_right: Dash App deployed on Heroku 
 
-Dash visualization for CHSI dataset  
+Python Plotly App Visualization for CHSI Dataset  
 https://tragically-eh-20397.herokuapp.com/  
 
 <br>
