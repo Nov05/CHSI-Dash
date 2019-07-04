@@ -6,6 +6,7 @@ import plotly.figure_factory as ff
 import plotly.graph_objs as go
 import pandas as pd
 import numpy as np
+import colorlover
 
 # importing Dataset wrapper class
 from data.dataset import Dataset
@@ -22,11 +23,15 @@ demogr = pd.read_csv('./data/DEMOGRAPHICS.csv')
 
 def display_fig(in_age='A', in_slice=0, in_range=0):
 	colorscales = ["Greens", "YlOrRd", "Bluered", "RdBu", "Reds",
-               	   "Blues", "Picnic", "Rainbow", "Portland", "Jet",
-               	   "Hot", "Blackbody", "Earth", "Electric", "Viridis",
-               	   "Cividis"]
-
+               	       "Blues", "Picnic", "Rainbow", "Portland", "Jet",
+               	       "Hot", "Blackbody", "Earth", "Electric", "Viridis",
+               	       "Cividis"]
+	portland = [[0, 'rgb(12,51,131)'], [0.25, 'rgb(10,136,186)'],
+  	            [0.5, 'rgb(242,211,56)'], [0.75, 'rgb(242,143,56)'],
+  	            [1, 'rgb(217,30,30)']]
+	portland_rgb = [i[1] for i in portland]
 	cols = demogr.columns.tolist()
+	
 	# age
 	if in_age=='A' or in_age=='B' or in_age=='C':
 		y = demogr[cols[17]]
@@ -77,12 +82,13 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
 	    # slicing data
 	    if in_range<0 or in_range>41:
 	    	in_range=0
-	    slicenum = 41
-	    slices = np.linspace(0, 41, slicenum)
+	    slicenum = 38
+	    slices = np.linspace(0, max(z), slicenum)
 	    condition = ((z >= slices[in_range]) & (z < slices[in_range+1]))
 	    x1 = x[condition]
 	    y1 = y[condition]
 	    z1 = [slices[in_range]] * len(x1)
+            slicecolor =colorlover.interp(portland_rgb, slicenum)[in_range]
 
 	    # creating a plane
 	    p1 = np.linspace(0, max(x), 5)
@@ -110,38 +116,58 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
 	        z=tuple(p3),
 	        name='slice',
 	        opacity=0.5,
-	        showlegend=False,
+		colorscale="Greys",
 	        showscale=False,
 	    )
-	    trace3 = go.Scatter3d(
-	        x=x1,
-	        y=y1,
-	        z=z1,
-	        name='Poverty',
-	        mode='markers',
-	        marker=dict(
-	            size=d*2,
-	            color=z, # set color to an array/list of desired values
-	            colorscale=colorscales[8], # choose a colorscale
-	            opacity=1,
-	            showscale=True,
-	            colorbar=dict(x=0.81, len=0.5,
-	                          thickness=10,
-	                          outlinecolor='white', outlinewidth=0,
-	                          title=dict(text="Poverty\nLevel", font=dict(size=10))
-	                         ),
-	            line=dict(width=0.01, color='gray')
-	        ),
-	        projection=dict(x=dict(show=True, opacity=0.05, scale=0.5),
-	                        y=dict(show=True, opacity=0.05, scale=0.5),
-	                        z=dict(show=True, opacity=0.05, scale=0.5),
-	                       ),
-	        showlegend=False,
-	    )
-	    data = [trace1, trace2, trace3]
-		##############
-		# end of if-else
-		##############
+
+            # this is merely a colorbar
+            trace3 = go.Scatter3d(
+                        x=[0],
+                        y=[0],
+                        z=[0],
+                        name='',
+                        mode='markers',
+                        marker=dict(
+                            size=0.01,
+                            color=z, # set color to an array/list of desired values
+                            colorscale=portland, # choose a colorscale
+                            opacity=1,
+                            showscale=True,
+                            colorbar=dict(x=0.81, len=0.5, 
+                                          thickness=10,
+                                          outlinecolor='white', outlinewidth=0,
+                                          title=dict(text="Poverty", font=dict(size=10))
+                                         ),
+                            line=dict(width=0.01, color='gray')
+                        ),
+                        showlegend=False,
+                    )    
+            # this is the actual sliced data points
+            # why separating data points and colorbar?
+            # cause I need only one color from the colorscale
+            trace4 = go.Scatter3d(
+                        x=x1,
+                        y=y1,
+                        z=z1,
+                        name='Poverty',
+                        mode='markers',
+                        marker=dict(
+                            size=d*2,
+                            color=slicecolor,
+                            opacity=1,
+                            showscale=False,
+                            line=dict(width=0.01, color='gray')
+                        ),
+                        projection=dict(x=dict(show=True, opacity=0.1, scale=0.8),
+                                        y=dict(show=True, opacity=0.1, scale=0.8),
+                                        z=dict(show=True, opacity=0.1, scale=0.8),
+                                       ),
+                        showlegend=False,
+                    ) 
+	    data = [trace1, trace2, trace3, trace4]
+        ##############
+        # end of if-else
+        ##############
 
 	layout = go.Layout(
 		plot_bgcolor='#F4F4F8',#colors['background'],
