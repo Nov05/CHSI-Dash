@@ -1,16 +1,19 @@
 # CHSI-Dash
 
+<br>
 ### :point_right: Dash App deployed on Heroku 
 
 Dash visualization for CHSI dataset  
 https://tragically-eh-20397.herokuapp.com/  
 
+<br>
 ### :point_right: Data Source
 
 **Community Health Status Indicators (CHSI) to Combat Obesity, Heart Disease and Cancer**  
 [Centers for Disease Control and Prevention](https://catalog.data.gov/dataset/community-health-status-indicators-chsi-to-combat-obesity-heart-disease-and-cancer)  
 Metadata Updated: June 3, 2019  
 
+<br>
 ### :point_right: Our Teamwork
 
 【**Deployment and Dash**】  
@@ -34,6 +37,7 @@ https://www.apowersoft.com/free-online-screen-recorder
 Mp4 to Gif, Change Gif Speed, Compress Gif, etc.  
 https://ezgif.com/video-to-gif  
 
+<br>
 ### :point_right: Project Logs
 
 2019-07-01 Project created  
