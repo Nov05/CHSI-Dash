@@ -79,10 +79,10 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
 	##############
 	else:
 	##############
-	    # slicing data
-	    if in_range<0 or in_range>41:
-	    	in_range=0
+	    # for slicing data
 	    slicenum = 38
+	    if in_range<0 or in_range>slicenum:
+	    	in_range=0
 	    slices = np.linspace(0, max(z), slicenum)
 	    condition = ((z >= slices[in_range]) & (z < slices[in_range+1]))
 	    x1 = x[condition]
@@ -90,7 +90,7 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
 	    z1 = [slices[in_range]] * len(x1)
             slicecolor =colorlover.interp(portland_rgb, slicenum)[in_range]
 
-	    # creating a plane
+	    # for creating a plane
 	    p1 = np.linspace(0, max(x), 5)
 	    p2 = np.linspace(0, max(y), 5)
 	    p1, p2 = np.meshgrid(p1, p2)
@@ -110,6 +110,7 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
 	        	),
 	        	showlegend=False,
 	    )
+            # this a a plane
 	    trace2 = go.Surface(
 	        x=tuple(p1),
 	        y=tuple(p2),
