@@ -191,7 +191,7 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
 	fig = go.Figure(data=data, layout=layout)
 	return fig
 
-def plot_state_choro(df):
+def plot_state_choro(df, age: str, cod: str):
 	"""
 	Plot state choropleth, adopted from georges code
 	"""
@@ -208,66 +208,106 @@ def plot_state_choro(df):
 	]
 
 	data = []
+	textb, textc, textd = "Age 1-14: ", "Age 15-24: ", "Age 25-44: "
+	B_Injury = age+'_'+cod
+	B_Homicide = age+'_'+cod
+	C_Injury = age+'_'+cod
+	C_Homicide = age+'_'+cod
+	C_Suicide = age+'_'+cod
+	D_Injury = age+'_'+cod
+	D_Homicide = age+'_'+cod
+	D_Suicide = age+'_'+cod
+	D_HIV = age+'_'+cod
 
-	df['B_Injury text'] = df['State_Name'] + '<br>' + \
-	  'B_Injury' + ': ' + df['B_Injury']
-	df['B_Homicide text'] = df['State_Name'] + '<br>' + \
-	  'B_Homicide' + ': ' + df['B_Homicide']
+	df[B_Injury+' text'] = df['State_Name'] + '<br>' + \
+		textb+df[B_Injury].astype(float).round(2).astype(str)+'%'
+	df[B_Homicide+' text'] = df['State_Name'] + '<br>' + \
+		textb+df[B_Homicide].astype(float).round(2).astype(str) +'%'
 
-	df['C_Injury text'] = df['State_Name'] + '<br>' + \
-	  'C_Injury' + ': ' + df['C_Injury']
-	df['C_Homicide text'] = df['State_Name'] + '<br>' + \
-	  'C_Homicide' + ': ' + df['C_Homicide']
-	df['C_Suicide text'] = df['State_Name'] + '<br>' + \
-	  'C_Suicide' + ': ' + df['C_Suicide']
+	df[C_Injury+' text'] = df['State_Name'] + '<br>' + \
+		textc + df[C_Injury].astype(float).round(2).astype(str) +'%'
+	df[C_Homicide+' text'] = df['State_Name'] + '<br>' + \
+		textc + df[C_Homicide].astype(float).round(2).astype(str) +'%'
+	df[C_Suicide+' text'] = df['State_Name'] + '<br>' + \
+		textc + df[C_Suicide].astype(float).round(2).astype(str) +'%'
 
-	df['D_Injury text'] = df['State_Name'] + '<br>' + \
-	  'D_Injury' + ': ' + df['D_Injury']
-	df['D_Homicide text'] = df['State_Name'] + '<br>' + \
-	  'D_Homicide' + ': ' + df['D_Homicide']
-	df['D_Suicide text'] = df['State_Name'] + '<br>' + \
-	  'D_Suicide' + ': ' + df['D_Suicide']
-	df['D_HIV text'] = df['State_Name'] + '<br>' + \
-	  'D_HIV' + ': ' + df['D_HIV']
+	df[D_Injury+' text'] = df['State_Name'] + '<br>' + \
+		textd + df[D_Injury].astype(float).round(2).astype(str) +'%'
+	df[D_Homicide+' text'] = df['State_Name'] + '<br>' + \
+		textd + df[D_Homicide].astype(float).round(2).astype(str) +'%'
+	df[D_Suicide+' text'] = df['State_Name'] + '<br>' + \
+		textd + df[D_Suicide].astype(float).round(2).astype(str) +'%'
+	df[D_HIV+' text'] = df['State_Name'] + '<br>' + \
+		textd + df[D_HIV].astype(float).round(2).astype(str) +'%'
+
+	# colorbar propertiess
+	colorbarx = 0.85
+	colorbary = 0.4
+	colorbarlen = 0.5
+	colorbarthickness = 5 # default 30
+	colorbaroutlinewidth = 0 # 0 to 1
+	# map title
+	title = 'Leading Cause of Death in USA 2003'
+	titley = 0.91
+	# hover text (no display of auto text)
+	hovertemplate = '<b>%{text}</b>'
 
 	trc1 = dict(type='choropleth',autocolorscale = False,locations=df['State_Abbr'],
-	            z=df['B_Injury'].astype(float),locationmode='USA-states',
-	            text = df['B_Injury text'],colorscale = scl,
-	            colorbar=dict(title = "Percentage"))
+              z=df[B_Injury].astype(float),locationmode='USA-states',
+              hovertemplate=hovertemplate, text=df[B_Injury+' text'], colorscale = scl,
+              colorbar=dict(x=colorbarx, y=colorbary, thickness=colorbarthickness, len=colorbarlen, outlinewidth=colorbaroutlinewidth,
+                            title = "Percentage"),
+              name='')
 	trc2 = dict(type='choropleth',autocolorscale = False,locations=df['State_Abbr'],
-	            z=df['B_Homicide'].astype(float),locationmode='USA-states',
-	            text = df['B_Homicide text'],colorscale = scl,
-	            colorbar=dict(title = "Percentage"))
+              z=df[B_Homicide].astype(float),locationmode='USA-states',
+              hovertemplate=hovertemplate, text = df[B_Homicide+' text'],colorscale = scl,
+              colorbar=dict(x=colorbarx, y=colorbary, thickness=colorbarthickness, len=colorbarlen, outlinewidth=colorbaroutlinewidth,
+                            title = "Percentage"),
+              name='')
 
 	trc3 = dict(type='choropleth',autocolorscale = False,locations=df['State_Abbr'],
-	            z=df['C_Injury'].astype(float),locationmode='USA-states',
-	            text = df['C_Injury text'],colorscale = scl,
-	            colorbar=dict(title = "Percentage"))
+              z=df[C_Injury].astype(float),locationmode='USA-states',
+              hovertemplate=hovertemplate, text = df[C_Injury+' text'],colorscale = scl,
+              colorbar=dict(x=colorbarx, y=colorbary, thickness=colorbarthickness, len=colorbarlen, outlinewidth=colorbaroutlinewidth,
+                            title = "Percentage"),
+              name='')
 	trc4 = dict(type='choropleth',autocolorscale = False,locations=df['State_Abbr'],
-	            z=df['C_Homicide'].astype(float),locationmode='USA-states',
-	            text = df['C_Homicide text'],colorscale = scl,
-	            colorbar=dict(title = "Percentage"))
+              z=df[C_Homicide].astype(float),locationmode='USA-states',
+              hovertemplate=hovertemplate, text = df[C_Homicide+' text'],colorscale = scl,
+              colorbar=dict(x=colorbarx, y=colorbary, thickness=colorbarthickness, len=colorbarlen, outlinewidth=colorbaroutlinewidth,
+                            title = "Percentage"),
+              name='')
 	trc5 = dict(type='choropleth',autocolorscale = False,locations=df['State_Abbr'],
-	            z=df['C_Suicide'].astype(float),locationmode='USA-states',
-	            text = df['C_Suicide text'],colorscale = scl,
-	            colorbar=dict(title = "Percentage"))
+              z=df[C_Suicide].astype(float),locationmode='USA-states',
+              hovertemplate=hovertemplate, text = df[C_Suicide+' text'],colorscale = scl,
+              colorbar=dict(x=colorbarx, y=colorbary, thickness=colorbarthickness, len=colorbarlen, outlinewidth=colorbaroutlinewidth,
+                            title = "Percentage"),
+              name='')
 
 	trc6 = dict(type='choropleth',autocolorscale = False,locations=df['State_Abbr'],
-	            z=df['D_Injury'].astype(float),locationmode='USA-states',
-	            text = df['D_Injury text'],colorscale = scl,
-	            colorbar=dict(title = "Percentage"))
+              z=df[D_Injury].astype(float),locationmode='USA-states',
+              hovertemplate=hovertemplate, text = df[D_Injury+' text'],colorscale = scl,
+              colorbar=dict(x=colorbarx, y=colorbary, thickness=colorbarthickness, len=colorbarlen, outlinewidth=colorbaroutlinewidth,
+                            title = "Percentage"),
+              name='')
 	trc7 = dict(type='choropleth',autocolorscale = False,locations=df['State_Abbr'],
-	            z=df['D_Homicide'].astype(float),locationmode='USA-states',
-	            text = df['D_Homicide text'],colorscale = scl,
-	            colorbar=dict(title = "Percentage"))
+              z=df[D_Homicide].astype(float),locationmode='USA-states',
+              hovertemplate=hovertemplate, text = df[D_Homicide+' text'],colorscale = scl,
+              colorbar=dict(x=colorbarx, y=colorbary, thickness=colorbarthickness, len=colorbarlen, outlinewidth=colorbaroutlinewidth,
+                            title = "Percentage"),
+              name='')
 	trc8 = dict(type='choropleth',autocolorscale = False,locations=df['State_Abbr'],
-	            z=df['D_Suicide'].astype(float),locationmode='USA-states',
-	            text = df['D_Suicide text'],colorscale = scl,
-	            colorbar=dict(title = "Percentage"))
+              z=df[D_Suicide].astype(float),locationmode='USA-states',
+              hovertemplate=hovertemplate, text = df[D_Suicide+' text'],colorscale = scl,
+              colorbar=dict(x=colorbarx, y=colorbary, thickness=colorbarthickness, len=colorbarlen, outlinewidth=colorbaroutlinewidth,
+                            title = "Percentage"),
+              name='')
 	trc9 = dict(type='choropleth',autocolorscale = False,locations=df['State_Abbr'],
-	            z=df['D_HIV'].astype(float),locationmode='USA-states',
-	            text = df['D_HIV text'],colorscale = scl,
-	            colorbar=dict(title = "Percentage"))
+              z=df[D_HIV].astype(float),locationmode='USA-states',
+              hovertemplate=hovertemplate, text = df[D_HIV+' text'],colorscale = scl,
+              colorbar=dict(x=colorbarx, y=colorbary, thickness=colorbarthickness, len=colorbarlen, outlinewidth=colorbaroutlinewidth,
+                            title = "Percentage"),
+              name='')
 
 	data = [trc1, trc2,trc3, trc4,trc5, trc6,trc7, trc8,trc9]
 
@@ -329,9 +369,9 @@ def plot_state_choro(df):
 				plot_bgcolor='#F4F4F8',#colors['background'],
 				paper_bgcolor='#F4F4F8',#colors['background'],
 				showlegend=False,
-				updatemenus=updatemenus,
+				#updatemenus=updatemenus,
 				geo = dict(scope = 'usa',projection = dict(type = 'albers usa'),
-				showlakes = True,lakecolor = 'rgb(255, 255, 255)'))
+				showlakes = True,lakecolor = '#F4F4F8'))#rgb(255, 255, 255)'))
 
 	fig = go.Figure(data = data, layout = layout)
 	return fig
@@ -410,16 +450,13 @@ text_style = dict(color='#444', fontFamily='sans-serif', fontWeight=300)
 Interactive options
 """
 slices_radio = [
-  {'label': 'All Data', 'value': 0},
-  {'label': 'Sliced Data', 'value': 1},
+	{'label': 'All Data', 'value': 0},
+	{'label': 'Sliced Data', 'value': 1},
 ]
 ages_dropdown = [
-  {'label': "Under 1 Years Old", 'value': 'A'},
-  {'label': "1 - 14 Years Old", 'value': 'B'},
-  {'label': "15 - 24 Years Old", 'value': 'C'},
-  {'label': "25 - 44 Years Old", 'value': 'D'},
-  {'label': "44 - 64 Years Old", 'value': 'E'},
-  {'label': "65+ Years Old", 'value': 'F'}
+	{'label': "1 - 14 Years Old", 'value': 'B'},
+	{'label': "15 - 24 Years Old", 'value': 'C'},
+	{'label': "25 - 44 Years Old", 'value': 'D'},
 ]
 ethnicity_dropdown = [
 	{'label': 'White', 'value': 'Wh'},
@@ -428,13 +465,9 @@ ethnicity_dropdown = [
 	{'label': 'Other', 'value': 'Ot'},
 ]
 causes_dropdown=[
-	{'label': "Birth Complication", 'value': 'Comp'},
-	{'label': "Birth Defect", 'value': 'BirthDef'},
 	{'label': "Injury", 'value': 'Injury'},
 	{'label': "Suicide", 'value': 'Suicide'},
-	{'label': "Cancer", 'value': 'Cancer'},
 	{'label': "Homicide", 'value': 'Homicide'},
-	{'label': "Heart Diseases", 'value': 'HeartDis'},
 	{'label': "HIV", 'value': 'HIV'}
 ]
 marks1 = {
@@ -447,16 +480,16 @@ app.layout = html.Div([
 		html.Div([
 			html.H2("A Story of Life and Death",
 					style={'margin-top':'5rem',
-							'margin-bottom':'0rem'}),#, 'display':'inline-block',}),#text_style),
+							'margin-bottom':'0rem'}),
 			html.H6("Cause of Death and Demographics Visualization, 1996-2003",
 					style={'margin-top':'0rem'})
 		], style = {'width': '48%', 'display':'inline-block'}),
 		html.Div([
-			html.Img(src='assets/logo.png',
+			html.Img(src='assets/logo2.png',
 					style = {'width': '60%', 'height': '20%',
 							'float':'right', 'position':'relative'})
 		], style = {'width': '48%', 'display':'inline-block'})
-	]),#, style = {'width': '100%'}),#, 'display':'inline-block'}),
+	]),
 
 	# All dropdown grid
 	html.Div([
@@ -551,22 +584,21 @@ def update_3dscatter(input1, input2, input3):
 
 @app.callback(Output('choropleth', 'figure'),
  			 [Input('ages', 'value'),
-			  Input('ethnicities', 'value'),
+			  #Input('ethnicities', 'value'),
 			  Input('cods', 'value')])
-def update_choro(age, ethnicities, cods):
+def update_choro(age, cods):
 	"""
 	This is the callback function that dynamically adjusts the choropleth by
 	taking inputs from the dropdown menus, calling the Dataset class to lookup
 	the appropriate column, get the data slices with FIPS and feature column.
-	It then returns a choropleth figure by calling plot_choropleth.
+	Returns a choropleth figure by calling plot_state_choro.
 
 	Parameters
 	----------
 	age: age brackets
-	ethnicities: ethnicities
 	cods: causes of death
 	"""
-	return plot_state_choro(state_cod)
+	return plot_state_choro(state_cod, age, cods)
 
 #@app.callback(Output('choropleth', 'figure'),
 # 			 [Input('ages', 'value'),

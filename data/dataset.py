@@ -99,8 +99,8 @@ class Dataset():
         comp_cols = [col for col in df_mean.columns if '_Comp' in col or
              '_BirthDef' in col or '_Cancer' in col or '_HeartDis' in col]
         df_drop = df_mean.drop(df_mean[comp_cols],axis=1)
-        print(df_drop.columns)
-        print(df_drop.head(5))
+        #print(df_drop.columns)
+        #print(df_drop.head(5))
 
         group = df_drop.columns[3:]
         # list and sort all states
@@ -130,7 +130,7 @@ class Dataset():
           state_lst.extend(cause_mean)
           death_data.append(state_lst)
 
-        print(len(death_data))
+        #print(len(death_data))
         # create dataframe for mean % of causes of death in all states
         chsi_cols = ['State_FIPS_Code','State_Name','State_Abbr','B_Injury','B_Homicide'
                     ,'C_Injury','C_Homicide','C_Suicide','D_Injury','D_Homicide'
