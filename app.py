@@ -14,7 +14,7 @@ from data.dataset import Dataset
 
 # preload the cause of death and demographics dataset and preprocess it.
 cod = Dataset('./data/LEADINGCAUSESOFDEATH.csv')
-cod.preproc()
+state_cod = cod.state_data()
 demogr = pd.read_csv('./data/DEMOGRAPHICS.csv')
 
 #########################################################################
@@ -191,6 +191,151 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
 	fig = go.Figure(data=data, layout=layout)
 	return fig
 
+def plot_state_choro(df):
+	"""
+	Plot state choropleth, adopted from georges code
+	"""
+	for col in df.columns:
+		df[col] = df[col].astype(str)
+
+	scl = [
+	    [0.0, 'rgb(242,240,247)'],
+	    [0.2, 'rgb(218,218,235)'],
+	    [0.4, 'rgb(188,189,220)'],
+	    [0.6, 'rgb(158,154,200)'],
+	    [0.8, 'rgb(117,107,177)'],
+	    [1.0, 'rgb(84,39,143)']
+	]
+
+	data = []
+
+	df['B_Injury text'] = df['State_Name'] + '<br>' + \
+	  'B_Injury' + ': ' + df['B_Injury']
+	df['B_Homicide text'] = df['State_Name'] + '<br>' + \
+	  'B_Homicide' + ': ' + df['B_Homicide']
+
+	df['C_Injury text'] = df['State_Name'] + '<br>' + \
+	  'C_Injury' + ': ' + df['C_Injury']
+	df['C_Homicide text'] = df['State_Name'] + '<br>' + \
+	  'C_Homicide' + ': ' + df['C_Homicide']
+	df['C_Suicide text'] = df['State_Name'] + '<br>' + \
+	  'C_Suicide' + ': ' + df['C_Suicide']
+
+	df['D_Injury text'] = df['State_Name'] + '<br>' + \
+	  'D_Injury' + ': ' + df['D_Injury']
+	df['D_Homicide text'] = df['State_Name'] + '<br>' + \
+	  'D_Homicide' + ': ' + df['D_Homicide']
+	df['D_Suicide text'] = df['State_Name'] + '<br>' + \
+	  'D_Suicide' + ': ' + df['D_Suicide']
+	df['D_HIV text'] = df['State_Name'] + '<br>' + \
+	  'D_HIV' + ': ' + df['D_HIV']
+
+	trc1 = dict(type='choropleth',autocolorscale = False,locations=df['State_Abbr'],
+	            z=df['B_Injury'].astype(float),locationmode='USA-states',
+	            text = df['B_Injury text'],colorscale = scl,
+	            colorbar=dict(title = "Percentage"))
+	trc2 = dict(type='choropleth',autocolorscale = False,locations=df['State_Abbr'],
+	            z=df['B_Homicide'].astype(float),locationmode='USA-states',
+	            text = df['B_Homicide text'],colorscale = scl,
+	            colorbar=dict(title = "Percentage"))
+
+	trc3 = dict(type='choropleth',autocolorscale = False,locations=df['State_Abbr'],
+	            z=df['C_Injury'].astype(float),locationmode='USA-states',
+	            text = df['C_Injury text'],colorscale = scl,
+	            colorbar=dict(title = "Percentage"))
+	trc4 = dict(type='choropleth',autocolorscale = False,locations=df['State_Abbr'],
+	            z=df['C_Homicide'].astype(float),locationmode='USA-states',
+	            text = df['C_Homicide text'],colorscale = scl,
+	            colorbar=dict(title = "Percentage"))
+	trc5 = dict(type='choropleth',autocolorscale = False,locations=df['State_Abbr'],
+	            z=df['C_Suicide'].astype(float),locationmode='USA-states',
+	            text = df['C_Suicide text'],colorscale = scl,
+	            colorbar=dict(title = "Percentage"))
+
+	trc6 = dict(type='choropleth',autocolorscale = False,locations=df['State_Abbr'],
+	            z=df['D_Injury'].astype(float),locationmode='USA-states',
+	            text = df['D_Injury text'],colorscale = scl,
+	            colorbar=dict(title = "Percentage"))
+	trc7 = dict(type='choropleth',autocolorscale = False,locations=df['State_Abbr'],
+	            z=df['D_Homicide'].astype(float),locationmode='USA-states',
+	            text = df['D_Homicide text'],colorscale = scl,
+	            colorbar=dict(title = "Percentage"))
+	trc8 = dict(type='choropleth',autocolorscale = False,locations=df['State_Abbr'],
+	            z=df['D_Suicide'].astype(float),locationmode='USA-states',
+	            text = df['D_Suicide text'],colorscale = scl,
+	            colorbar=dict(title = "Percentage"))
+	trc9 = dict(type='choropleth',autocolorscale = False,locations=df['State_Abbr'],
+	            z=df['D_HIV'].astype(float),locationmode='USA-states',
+	            text = df['D_HIV text'],colorscale = scl,
+	            colorbar=dict(title = "Percentage"))
+
+	data = [trc1, trc2,trc3, trc4,trc5, trc6,trc7, trc8,trc9]
+
+	updatemenus = list([
+	    dict(active=-1,
+	         buttons=list([
+	            dict(label = 'B_Injury',
+	                 method = 'update',
+	                 args = [{'visible': [True,False,False,False,False,False,False,False,False]},
+	                         {'title': 'B_Injury',
+	                          'annotations': []}]),
+	            dict(label = 'B_Homicide',
+	                 method = 'update',
+	                 args = [{'visible': [False,True,False,False,False,False,False,False,False]},
+	                         {'title': 'B_Homicide',
+	                          'annotations': []}]),
+
+	            dict(label = 'C_Injury',
+	                 method = 'update',
+	                 args = [{'visible': [False,False,True,False,False,False,False,False,False]},
+	                         {'title': 'C_Injury',
+	                          'annotations': []}]),
+	            dict(label = 'C_Homicide',
+	                 method = 'update',
+	                 args = [{'visible': [False,False,False,True,False,False,False,False,False]},
+	                         {'title': 'C_Homicide',
+	                          'annotations': []}]),
+	            dict(label = 'C_Suicide',
+	                 method = 'update',
+	                 args = [{'visible': [False,False,False,False,True,False,False,False,False]},
+	                         {'title': 'C_Suicide',
+	                          'annotations': []}]),
+
+	            dict(label = 'D_Injury',
+	                 method = 'update',
+	                 args = [{'visible': [False,False,False,False,False,True,False,False,False]},
+	                         {'title': 'D_Injury',
+	                          'annotations': []}]),
+	            dict(label = 'D_Homicide',
+	                 method = 'update',
+	                 args = [{'visible': [False,False,False,False,False,False,True,False,False]},
+	                         {'title': 'D_Homicide',
+	                          'annotations': []}]),
+	            dict(label = 'D_Suicide',
+	                 method = 'update',
+	                 args = [{'visible': [False,False,False,False,False,False,False,True,False]},
+	                         {'title': 'D_Suicide',
+	                          'annotations': []}]),
+	            dict(label = 'D_HIV',
+	                 method = 'update',
+	                 args = [{'visible': [False,False,False,False,False,False,False,False,True]},
+	                         {'title': 'D_HIV',
+	                          'annotations': []}]),
+	        ]),
+	    )
+	])
+
+	layout = dict(title='2003 Leading Cause of Death in USA',
+				plot_bgcolor='#F4F4F8',#colors['background'],
+				paper_bgcolor='#F4F4F8',#colors['background'],
+				showlegend=False,
+				updatemenus=updatemenus,
+				geo = dict(scope = 'usa',projection = dict(type = 'albers usa'),
+				showlakes = True,lakecolor = 'rgb(255, 255, 255)'))
+
+	fig = go.Figure(data = data, layout = layout)
+	return fig
+
 def plot_choropleth(df):
 	"""
 	This function generates and returns a choropleth from the input dataset.
@@ -206,7 +351,6 @@ def plot_choropleth(df):
 	colorscale = ["#f7fbff", "#ebf3fb", "#deebf7", "#d2e3f3", "#c6dbef", "#b3d2e9",
 				  "#9ecae1", "#85bcdb", "#6baed6", "#57a0ce", "#4292c6", "#3082be",
 				  "#2171b5", "#1361a9",	"#08519c", "#0b4083", "#08306b"]
-
 
 	fips = df.FIPS.tolist()
 	values = df.iloc[:,1].tolist()
@@ -351,7 +495,14 @@ app.layout = html.Div([
 	html.Div([
 		# left plot
 		html.Div([
-			dcc.Graph(id='choropleth')
+			html.Div([
+				dcc.Graph(id='choropleth')
+			]),
+			html.Div([
+				html.P("Source: U.S. Department of Health & Human Services"),
+				html.P("Community Health Status Indicator to Combat Obesity, Heart Disease and Cancer"),
+				html.P("https://catalog.data.gov/dataset/community-health-status-indicators-chsi-to-combat-obesity-heart-disease-and-cancer")
+			])
 		], style = {'width': '48%', 'display':'inline-block'}),
 		# right plot with radio items and slider
 		html.Div([
@@ -405,23 +556,42 @@ def update_choro(age, ethnicities, cods):
 	the appropriate column, get the data slices with FIPS and feature column.
 	It then returns a choropleth figure by calling plot_choropleth.
 
-	NOTE: if NaN values are plotted, the mouseover data inpsection will not work
-	Instead, fillna with 0 so every polygon is plotted.
-
 	Parameters
 	----------
 	age: age brackets
 	ethnicities: ethnicities
 	cods: causes of death
 	"""
-	if cod.isin_cols(age, ethnicities, cods):
-		slices = cod.lookup(age, ethnicities, cods)
-	else:
-		# if age/ethnicities/cods combination dont exist, plot default graph.
-		slices = cod.lookup('D', 'Wh', 'Homicide')
+	return plot_state_choro(state_cod)
 
-	tx_slices = slices[slices.FIPS.str.startswith("48")].fillna(0)
-	return plot_choropleth(tx_slices)
+#@app.callback(Output('choropleth', 'figure'),
+# 			 [Input('ages', 'value'),
+#			  Input('ethnicities', 'value'),
+#			  Input('cods', 'value')])
+#def update_choro(age, ethnicities, cods):
+#	"""
+#	This is the callback function that dynamically adjusts the choropleth by
+#	taking inputs from the dropdown menus, calling the Dataset class to lookup
+#	the appropriate column, get the data slices with FIPS and feature column.
+#	It then returns a choropleth figure by calling plot_choropleth.
+#
+#	NOTE: if NaN values are plotted, the mouseover data inpsection will not work
+#	Instead, fillna with 0 so every polygon is plotted.
+#
+#	Parameters
+#	----------
+#	age: age brackets
+#	ethnicities: ethnicities
+#	cods: causes of death
+#	"""
+#	if cod.isin_cols(age, ethnicities, cods):
+#		slices = cod.lookup(age, ethnicities, cods)
+#	else:
+#		# if age/ethnicities/cods combination dont exist, plot default graph.
+#		slices = cod.lookup('D', 'Wh', 'Homicide')
+#
+#	tx_slices = slices[slices.FIPS.str.startswith("48")].fillna(0)
+#	return plot_choropleth(tx_slices)
 
 
 if __name__ == '__main__':
