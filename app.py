@@ -366,6 +366,8 @@ def plot_state_choro(df, age: str, cod: str):
 	])
 
 	layout = dict(#title='2003 Leading Cause of Death in USA',
+				width=600, height=700,
+				#paper_bgcolor='rgba(0,0,0,0)', #plot_bgcolor='rgba(0,0,0,0)',
 				plot_bgcolor='#F4F4F8',#colors['background'],
 				paper_bgcolor='#F4F4F8',#colors['background'],
 				showlegend=False,
@@ -442,7 +444,6 @@ server = app.server
 app.config['suppress_callback_exceptions']=True
 
 # Set style basics
-#app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 app.css.append_css({'external_url':'assets/stylesheet.css'})
 text_style = dict(color='#444', fontFamily='sans-serif', fontWeight=300)
 
@@ -458,12 +459,12 @@ ages_dropdown = [
 	{'label': "15 - 24 Years Old", 'value': 'C'},
 	{'label': "25 - 44 Years Old", 'value': 'D'},
 ]
-ethnicity_dropdown = [
-	{'label': 'White', 'value': 'Wh'},
-	{'label': 'Black', 'value': 'Bl'},
-	{'label': 'Hispanic', 'value': 'Hi'},
-	{'label': 'Other', 'value': 'Ot'},
-]
+#ethnicity_dropdown = [
+#	{'label': 'White', 'value': 'Wh'},
+#	{'label': 'Black', 'value': 'Bl'},
+#	{'label': 'Hispanic', 'value': 'Hi'},
+#	{'label': 'Other', 'value': 'Ot'},
+#]
 causes_dropdown=[
 	{'label': "Injury", 'value': 'Injury'},
 	{'label': "Suicide", 'value': 'Suicide'},
@@ -503,16 +504,16 @@ app.layout = html.Div([
 			)
 		], style = {'width': '31%', 'display':'inline-block',
 					'fontSize': '13px', 'padding-right': '20px'}),
-		html.Div([
-			html.Div('Ethnic Group'),
-			dcc.Dropdown(
-					id='ethnicities',
-					options=ethnicity_dropdown,
-					multi=False, clearable=False, searchable=False,
-					value='Wh'
-			)
-		], style = {'width': '31%', 'display':'inline-block',
-					'fontSize': '13px', 'padding-right': '20px'}),
+		#html.Div([
+		#	html.Div('Ethnic Group'),
+		#	dcc.Dropdown(
+		#			id='ethnicities',
+		#			options=ethnicity_dropdown,
+		#			multi=False, clearable=False, searchable=False,
+		#			value='Wh'
+		#	)
+		#], style = {'width': '31%', 'display':'inline-block',
+		#			'fontSize': '13px', 'padding-right': '20px'}),
 		html.Div([
 			html.Div('Age Group'),
 			dcc.Dropdown(
@@ -522,7 +523,28 @@ app.layout = html.Div([
 					value='D'
 			)
 		], style = {'width': '31%', 'display':'inline-block',
-					'fontSize': '13px', 'padding-right': '20px'})
+					'fontSize': '13px', 'padding-right': '20px'}),
+		html.Div([
+			dcc.RadioItems(id='radio1',
+					        options=slices_radio,
+					        value=0,
+					        labelStyle={'display': 'inline-block'},
+					        style = {'fontSize': '13px', 'padding-left': '0px'},
+		    ),
+		    html.Div(children='Slice Data by Poverty Level',
+			    	style = {'fontSize': '13px', 'padding-left': '0px'}),
+	    	html.Div(
+	    		dcc.Slider(id="slider1",
+	        			min=0,
+			        	max=30,
+			        	step=1,
+			        	value=0,
+			        	marks=marks1,
+			        ),
+			    	style={'height': '20px', 'width': '20%',
+							'padding-left': '40px', 'display': 'inline-block'},)
+	    ], style = {'width': '31%', 'display':'inline-block',
+					'fontSize': '13px', 'padding-left': '20px'})
 	]),
 
 	# plots grid and radio items.  left and right plots
@@ -546,30 +568,6 @@ app.layout = html.Div([
 			html.Div([
 				dcc.Graph(id="scatter3d")
 			]),
-			html.Div([
-				dcc.RadioItems(id='radio1',
-			        options=slices_radio,
-			        value=0,
-			        labelStyle={'display': 'inline-block'},
-			        style = {'fontSize': '15px', 'padding-left': '40px'},
-			    ),
-			    html.Div(children='Slice Data by Poverty Level',
-			    	style = {'fontSize': '15px', 'padding-left': '40px'})
-			], style = {'fontSize': '10px',
-		         		 'padding-left': '20px'}),
-		    html.Div(
-		    	dcc.Slider(id="slider1",
-		        	min=0,
-		        	max=30,
-		        	step=1,
-		        	value=0,
-		        	marks=marks1,
-		        ),
-		    	style={'height': '20px',
-		           		'width': '20%',
-						'padding-left': '40px',
-						'display': 'inline-block'},
-		    )
 		], style = {'width': '48%',
 					'display':'inline-block'})
 	], style = {'width': '98%', 'display':'inline-block'})
