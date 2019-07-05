@@ -8,7 +8,7 @@ Python Plotly App Visualization for CHSI Dataset
 https://tragically-eh-20397.herokuapp.com/  
 http://dash-app-chsi.herokuapp.com/   
 <a href="http://example.com/" target="_blank">Hello, world!</a>  
-[link]("http://example.com/"){:target="_blank"}  
+[go](http://stackoverflow.com){:target="_blank" rel="noopener"}  
 <br>
 
 ## :point_right: Data Source
