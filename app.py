@@ -173,8 +173,8 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
         ##############
 
 	layout = go.Layout(
-		plot_bgcolor='#F4F4F8',#colors['background'],
-		paper_bgcolor='#F4F4F8',#colors['background'],
+		plot_bgcolor='#FFFFFF',#colors['background'],
+		paper_bgcolor='#FFFFFF',#colors['background'],
     	autosize=True,
     	#width=600,
     	#height=500,
@@ -312,8 +312,8 @@ def plot_state_choro(df, age: str, cod: str):
 	data = [trc1, trc2,trc3, trc4,trc5, trc6,trc7, trc8,trc9]
 
 	layout = dict(#title='Leading Cause of Death in USA',
-				plot_bgcolor='#F4F4F8',
-				paper_bgcolor='#F4F4F8',
+				plot_bgcolor='#FFFFFF',
+				paper_bgcolor='#FFFFFF',
 				margin = dict(r=20, l=0, t=0, b=0),
 				showlegend=False,
 				#updatemenus=updatemenus,
@@ -352,8 +352,8 @@ def plot_choropleth(df):
 	)]
 
 	layout = go.Layout(
-		plot_bgcolor='#F4F4F8',#colors['background'],
-		paper_bgcolor='#F4F4F8',#colors['background'],
+		plot_bgcolor='#FFFFFF',#colors['background'],
+		paper_bgcolor='#FFFFFF',#colors['background'],
 		hovermode = 'closest',
 		margin = dict(r=0, l=0, t=0, b=0),
 		annotations = annotations,
