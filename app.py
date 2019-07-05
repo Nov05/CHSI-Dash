@@ -37,13 +37,13 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
 	# age
 	if in_age=='A' or in_age=='B' or in_age=='C':
             y = demogr[cols[17]]
-            titley = "y = Age Under 19"
+            titley = "y = Age Under 19 (%)"
 	elif in_age=='D' or in_age=='E':
             y = demogr[cols[20]]
-            titley = "y = Age 19-64"
+            titley = "y = Age 19-64 (%)"
 	elif in_age=='F':
 	    y = demogr[cols[23]] + demogr[cols[26]]
-	    titley = "y = Age Above 64"
+	    titley = "y = Age Above 64 (%)"
 
 	# log10(population density), poverty
 	x = np.log10(demogr[cols[11]].replace([-2222,0], [demogr[cols[11]].mean(),1]))
@@ -139,7 +139,7 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
 							colorbar=dict(x=0.81, len=0.5,
 										  thickness=10,
 										  outlinecolor='white', outlinewidth=0,
-										  title=dict(text="Poverty", font=dict(size=10))
+										  title=dict(text=titlez, font=dict(size=10))
 										  ),
                             line=dict(width=0.01, color='gray')
                         ),
