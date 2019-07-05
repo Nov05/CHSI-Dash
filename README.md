@@ -6,6 +6,7 @@
 
 Python Plotly App Visualization for CHSI Dataset  
 https://tragically-eh-20397.herokuapp.com/  
+http://dash-app-chsi.herokuapp.com/   
 
 <br>
 
