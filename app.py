@@ -31,14 +31,16 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
   	            [1, 'rgb(217,30,30)']]
 	portland_rgb = [i[1] for i in portland]
 	cols = demogr.columns.tolist()
+	titlez = "Poverty (%)"
+	colorbarx = 0.95
 	
 	# age
 	if in_age=='A' or in_age=='B' or in_age=='C':
-		y = demogr[cols[17]]
-		titley = "y = Age Under 19"
+            y = demogr[cols[17]]
+            titley = "y = Age Under 19"
 	elif in_age=='D' or in_age=='E':
-		y = demogr[cols[20]]
-		titley = "y = Age 19-64"
+            y = demogr[cols[20]]
+            titley = "y = Age 19-64"
 	elif in_age=='F':
 	    y = demogr[cols[23]] + demogr[cols[26]]
 	    titley = "y = Age Above 64"
@@ -62,10 +64,10 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
 				colorscale=colorscales[8],   # choose a colorscale
 				opacity=1,
 				showscale=True,
-				colorbar=dict(x=0.81, len=0.5,
+				colorbar=dict(x=colorbarx, len=0.5,
 							  thickness=10,
 							  outlinecolor='white', outlinewidth=0,
-							  title=dict(text="Poverty", font=dict(size=10))
+							  title=dict(text=titlez, font=dict(size=10))
 							  ),
 				 line=dict(width=0.001, color='black')
 			),
@@ -88,7 +90,7 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
 	    x1 = x[condition]
 	    y1 = y[condition]
 	    z1 = [slices[in_range]] * len(x1)
-            slicecolor =colorlover.interp(portland_rgb, slicenum)[in_range]
+            slicecolor = colorlover.interp(portland_rgb, slicenum)[in_range]
 
 	    # for creating a plane
 	    p1 = np.linspace(0, max(x), 5)
@@ -97,7 +99,7 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
 	    p3 = [[slices[in_range]] * 5] * 5
 
 	    trace1 = go.Scatter3d(
-		    x=x,
+		x=x,
 	    	y=y,
 	    	z=z,
 	    	mode='markers',
@@ -134,10 +136,10 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
                             colorscale=portland, # choose a colorscale
                             opacity=1,
                             showscale=True,
-                            colorbar=dict(x=0.81, len=0.5, 
+                            colorbar=dict(x=colorbarx, len=0.5, 
                                           thickness=10,
                                           outlinecolor='white', outlinewidth=0,
-                                          title=dict(text="Poverty", font=dict(size=10))
+                                          title=dict(text=titlez, font=dict(size=10))
                                          ),
                             line=dict(width=0.01, color='gray')
                         ),
@@ -184,7 +186,7 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
 		),
 		scene=dict(xaxis=dict(title="x = Population Density (lg)"),
                    yaxis=dict(title=titley),
-                   zaxis=dict(title="z = Poverty"),),
+                   zaxis=dict(title="z = "+titlez),),
 	)
 	fig = go.Figure(data=data, layout=layout)
 	return fig
