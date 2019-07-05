@@ -179,7 +179,7 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
     	#width=600,
     	#height=500,
     	margin=dict(
-        	l=0,
+        	l=10,
 	        r=0,
         	b=0,
         	t=0
@@ -311,65 +311,9 @@ def plot_state_choro(df, age: str, cod: str):
 
 	data = [trc1, trc2,trc3, trc4,trc5, trc6,trc7, trc8,trc9]
 
-	updatemenus = list([
-	    dict(active=-1,
-	         buttons=list([
-	            dict(label = 'B_Injury',
-	                 method = 'update',
-	                 args = [{'visible': [True,False,False,False,False,False,False,False,False]},
-	                         {'title': 'B_Injury',
-	                          'annotations': []}]),
-	            dict(label = 'B_Homicide',
-	                 method = 'update',
-	                 args = [{'visible': [False,True,False,False,False,False,False,False,False]},
-	                         {'title': 'B_Homicide',
-	                          'annotations': []}]),
-
-	            dict(label = 'C_Injury',
-	                 method = 'update',
-	                 args = [{'visible': [False,False,True,False,False,False,False,False,False]},
-	                         {'title': 'C_Injury',
-	                          'annotations': []}]),
-	            dict(label = 'C_Homicide',
-	                 method = 'update',
-	                 args = [{'visible': [False,False,False,True,False,False,False,False,False]},
-	                         {'title': 'C_Homicide',
-	                          'annotations': []}]),
-	            dict(label = 'C_Suicide',
-	                 method = 'update',
-	                 args = [{'visible': [False,False,False,False,True,False,False,False,False]},
-	                         {'title': 'C_Suicide',
-	                          'annotations': []}]),
-
-	            dict(label = 'D_Injury',
-	                 method = 'update',
-	                 args = [{'visible': [False,False,False,False,False,True,False,False,False]},
-	                         {'title': 'D_Injury',
-	                          'annotations': []}]),
-	            dict(label = 'D_Homicide',
-	                 method = 'update',
-	                 args = [{'visible': [False,False,False,False,False,False,True,False,False]},
-	                         {'title': 'D_Homicide',
-	                          'annotations': []}]),
-	            dict(label = 'D_Suicide',
-	                 method = 'update',
-	                 args = [{'visible': [False,False,False,False,False,False,False,True,False]},
-	                         {'title': 'D_Suicide',
-	                          'annotations': []}]),
-	            dict(label = 'D_HIV',
-	                 method = 'update',
-	                 args = [{'visible': [False,False,False,False,False,False,False,False,True]},
-	                         {'title': 'D_HIV',
-	                          'annotations': []}]),
-	        ]),
-	    )
-	])
-
-	layout = dict(#title='2003 Leading Cause of Death in USA',
-				#width=600, height=700,
-				#paper_bgcolor='rgba(0,0,0,0)', #plot_bgcolor='rgba(0,0,0,0)',
-				plot_bgcolor='#F4F4F8',#colors['background'],
-				paper_bgcolor='#F4F4F8',#colors['background'],
+	layout = dict(#title='Leading Cause of Death in USA',
+				plot_bgcolor='#F4F4F8',
+				paper_bgcolor='#F4F4F8',
 				margin = dict(r=20, l=0, t=0, b=0),
 				showlegend=False,
 				#updatemenus=updatemenus,
@@ -446,7 +390,6 @@ app.config['suppress_callback_exceptions']=True
 
 # Set style basics
 app.css.append_css({'external_url':'assets/stylesheet.css'})
-text_style = dict(color='#444', fontFamily='sans-serif', fontWeight=300)
 
 """
 Interactive options
@@ -478,53 +421,44 @@ marks1 = {
 
 app.layout = html.Div([
 	# Header Div
+	#html.Div([
+	#	html.Img(src='assets/logo2.png',
+	#			style = {'width': '50%', 'height': '20%',
+	#					'float':'left', 'position':'relative'}),
+		#html.H2("A Story of Life and Death",
+		#		style={'margin-top':'5rem',
+		#				'margin-bottom':'0rem'}),
+		#html.P("Cause of Death and Demographics Visualization, 1996-2003",
+		#		style={'margin-top':'0rem'})
+	#], style = {'width': '66%', 'display':'inline-block'}),
+
+	# Header + Control Grid
 	html.Div([
-		html.Div([
-			html.H2("A Story of Life and Death",
-					style={'margin-top':'5rem',
-							'margin-bottom':'0rem'}),
-			html.H6("Cause of Death and Demographics Visualization, 1996-2003",
-					style={'margin-top':'0rem'})
-		], style = {'width': '48%', 'display':'inline-block'}),
 		html.Div([
 			html.Img(src='assets/logo2.png',
-					style = {'width': '60%', 'height': '20%',
-							'float':'right', 'position':'relative'})
-		], style = {'width': '48%', 'display':'inline-block'})
-	]),
-
-	# All dropdown grid
-	html.Div([
-		html.Div([
-			html.Div('Cause of Death'),
-			dcc.Dropdown(
-					id='cods',
-					options=causes_dropdown,
-					multi=False, clearable=False, searchable=False,
-					value='Homicide'
-			)
-		], style = {'width': '31%', 'display':'inline-block',
-					'fontSize': '13px', 'padding-right': '20px'}),
-		#html.Div([
-		#	html.Div('Ethnic Group'),
-		#	dcc.Dropdown(
-		#			id='ethnicities',
-		#			options=ethnicity_dropdown,
-		#			multi=False, clearable=False, searchable=False,
-		#			value='Wh'
-		#	)
-		#], style = {'width': '31%', 'display':'inline-block',
-		#			'fontSize': '13px', 'padding-right': '20px'}),
-		html.Div([
-			html.Div('Age Group'),
-			dcc.Dropdown(
-					id='ages',
-					options=ages_dropdown,
-					multi=False, clearable=False, searchable=False,
-					value='D'
-			)
-		], style = {'width': '31%','display':'inline-block',
-					'fontSize': '13px', 'padding-right': '20px'}),
+				style = {'width': '60%', 'height': '20%',
+						'float':'left', 'position':'relative'}),
+			html.Div([
+				html.Div('Cause of Death'),
+				dcc.Dropdown(
+						id='cods',
+						options=causes_dropdown,
+						multi=False, clearable=False, searchable=False,
+						value='Homicide'
+				)
+			], style = {'width': '31%', 'display':'inline-block',
+						'fontSize': '13px', 'padding-left': '40px'}),
+			html.Div([
+				html.Div('Age Group'),
+				dcc.Dropdown(
+						id='ages',
+						options=ages_dropdown,
+						multi=False, clearable=False, searchable=False,
+						value='D'
+				)
+			], style = {'width': '31%','display':'inline-block',
+						'fontSize': '13px', 'padding-left': '40px'})
+		], style = {'width': '70%', 'display':'inline-block'}),
 		html.Div([
 			dcc.RadioItems(id='radio1',
 					        options=slices_radio,
@@ -543,12 +477,12 @@ app.layout = html.Div([
 			        	marks=marks1,
 			        ),
 			    	style={'height': '20px', 'width': '20%',
-							'padding-left': '40px', 'display': 'inline-block'},)
-	    ], style = {'width': '31%', 'height':'70px','display':'inline-block',
-					'fontSize': '13px', 'padding-left': '20px'})
+							'padding-left': '0px', 'display': 'inline-block'},)
+	    ], style = {'width': '30%', 'display':'inline-block',
+					'fontSize': '13px'})#, 'padding-left': '20px'})
 	]),
 
-	# plots grid and radio items.  left and right plots
+	# plots Div. left and right plots
 	html.Div([
 		# left plot
 		html.Div([
@@ -565,14 +499,15 @@ app.layout = html.Div([
 					'display':'inline-block'})
 	], style = {'width': '98%', 'display':'inline-block'}),
 
+	# Disclaimer Div
 	html.Div([
 		html.P("Source: U.S. Department of Health & Human Services",
-				style={'margin-top':'5rem', 'margin-bottom':'0rem'}),
+				style={'margin-top':'0rem', 'margin-bottom':'0rem'}),
 		html.P("Community Health Status Indicator to Combat Obesity, Heart Disease and Cancer",
 				style={'margin-top':'0rem', 'margin-bottom':'0rem'}),
 		html.P("https://catalog.data.gov/dataset/community-health-status-indicators-chsi-to-combat-obesity-heart-disease-and-cancer",
 				style={'margin-top':'0rem', 'margin-bottom':'0rem'})
-	], style = {'width': '98%', 'display':'inline-block'})
+	], style = {'width': '98%', 'margin-top':'5rem','fontSize': '10px'})
 ])
 
 @app.callback(Output("scatter3d", "figure"),
