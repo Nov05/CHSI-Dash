@@ -176,8 +176,8 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
 		plot_bgcolor='#F4F4F8',#colors['background'],
 		paper_bgcolor='#F4F4F8',#colors['background'],
     	autosize=True,
-    	width=600,
-    	height=500,
+    	#width=600,
+    	#height=500,
     	margin=dict(
         	l=0,
 	        r=0,
@@ -366,10 +366,11 @@ def plot_state_choro(df, age: str, cod: str):
 	])
 
 	layout = dict(#title='2003 Leading Cause of Death in USA',
-				width=600, height=700,
+				#width=600, height=700,
 				#paper_bgcolor='rgba(0,0,0,0)', #plot_bgcolor='rgba(0,0,0,0)',
 				plot_bgcolor='#F4F4F8',#colors['background'],
 				paper_bgcolor='#F4F4F8',#colors['background'],
+				margin = dict(r=20, l=0, t=0, b=0),
 				showlegend=False,
 				#updatemenus=updatemenus,
 				geo = dict(scope = 'usa',projection = dict(type = 'albers usa'),
@@ -522,7 +523,7 @@ app.layout = html.Div([
 					multi=False, clearable=False, searchable=False,
 					value='D'
 			)
-		], style = {'width': '31%', 'display':'inline-block',
+		], style = {'width': '31%','display':'inline-block',
 					'fontSize': '13px', 'padding-right': '20px'}),
 		html.Div([
 			dcc.RadioItems(id='radio1',
@@ -543,7 +544,7 @@ app.layout = html.Div([
 			        ),
 			    	style={'height': '20px', 'width': '20%',
 							'padding-left': '40px', 'display': 'inline-block'},)
-	    ], style = {'width': '31%', 'display':'inline-block',
+	    ], style = {'width': '31%', 'height':'70px','display':'inline-block',
 					'fontSize': '13px', 'padding-left': '20px'})
 	]),
 
@@ -554,22 +555,23 @@ app.layout = html.Div([
 			html.Div([
 				dcc.Graph(id='choropleth')
 			]),
-			html.Div([
-				html.P("Source: U.S. Department of Health & Human Services",
-						style={'margin-top':'5rem', 'margin-bottom':'0rem'}),
-				html.P("Community Health Status Indicator to Combat Obesity, Heart Disease and Cancer",
-						style={'margin-top':'0rem', 'margin-bottom':'0rem'}),
-				html.P("https://catalog.data.gov/dataset/community-health-status-indicators-chsi-to-combat-obesity-heart-disease-and-cancer",
-						style={'margin-top':'0rem', 'margin-bottom':'0rem'})
-			])
-		], style = {'width': '48%', 'display':'inline-block'}),
+		], style = {'width': '49%', 'display':'inline-block'}),
 		# right plot with radio items and slider
 		html.Div([
 			html.Div([
 				dcc.Graph(id="scatter3d")
 			]),
-		], style = {'width': '48%',
+		], style = {'width': '49%',
 					'display':'inline-block'})
+	], style = {'width': '98%', 'display':'inline-block'}),
+
+	html.Div([
+		html.P("Source: U.S. Department of Health & Human Services",
+				style={'margin-top':'5rem', 'margin-bottom':'0rem'}),
+		html.P("Community Health Status Indicator to Combat Obesity, Heart Disease and Cancer",
+				style={'margin-top':'0rem', 'margin-bottom':'0rem'}),
+		html.P("https://catalog.data.gov/dataset/community-health-status-indicators-chsi-to-combat-obesity-heart-disease-and-cancer",
+				style={'margin-top':'0rem', 'margin-bottom':'0rem'})
 	], style = {'width': '98%', 'display':'inline-block'})
 ])
 
