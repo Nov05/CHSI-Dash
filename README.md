@@ -47,6 +47,6 @@ https://ezgif.com/video-to-gif
 ## :point_right: Project Logs
 
 2019-07-01 Project created  
-
+2019-07-05 Project finished
 
 
