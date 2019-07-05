@@ -139,7 +139,7 @@ def display_fig(in_age='A', in_slice=0, in_range=0):
 							colorbar=dict(x=0.81, len=0.5,
 										  thickness=10,
 										  outlinecolor='white', outlinewidth=0,
-										  title=dict(text="Poverty", font=dict(size=10))
+										  title=dict(text=titlez, font=dict(size=10))
 										  ),
                             line=dict(width=0.01, color='gray')
                         ),
