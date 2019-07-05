@@ -27,7 +27,7 @@ To deploy on Heroku, git add and commit, then do:
 ```git push heroku master```  
 
 ### 【Plotly Choropleth Map】by @gyhou   
-<img src="https://github.com/Nov05/CHSI-Dash/blob/master/pictures/02.gif?raw=true" width=450>   
+<img src="https://github.com/Nov05/CHSI-Dash/blob/master/pictures/02.gif?raw=true" width=550>   
 
 ### 【Plotly 3D Scatter】by @nov05    
 <img src="https://github.com/Nov05/CHSI-Dash/blob/master/pictures/ezgif.com-optimize.gif?raw=true" width=450>  
