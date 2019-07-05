@@ -325,7 +325,7 @@ def plot_state_choro(df):
 	    )
 	])
 
-	layout = dict(title='2003 Leading Cause of Death in USA',
+	layout = dict(#title='2003 Leading Cause of Death in USA',
 				plot_bgcolor='#F4F4F8',#colors['background'],
 				paper_bgcolor='#F4F4F8',#colors['background'],
 				showlegend=False,
@@ -446,13 +446,14 @@ app.layout = html.Div([
 	html.Div([
 		html.Div([
 			html.H2("A Story of Life and Death",
-					style={'margin-bottom':'0rem', 'fontFamily':'sans-serif'}),#, 'display':'inline-block',}),#text_style),
+					style={'margin-top':'5rem',
+							'margin-bottom':'0rem'}),#, 'display':'inline-block',}),#text_style),
 			html.H6("Cause of Death and Demographics Visualization, 1996-2003",
-					style={'margin-top':'0rem', 'fontFamily':'sans-serif'})
+					style={'margin-top':'0rem'})
 		], style = {'width': '48%', 'display':'inline-block'}),
 		html.Div([
 			html.Img(src='assets/logo.png',
-					style = {'width': '80%', 'height': '40%',
+					style = {'width': '60%', 'height': '20%',
 							'float':'right', 'position':'relative'})
 		], style = {'width': '48%', 'display':'inline-block'})
 	]),#, style = {'width': '100%'}),#, 'display':'inline-block'}),
@@ -499,9 +500,12 @@ app.layout = html.Div([
 				dcc.Graph(id='choropleth')
 			]),
 			html.Div([
-				html.P("Source: U.S. Department of Health & Human Services"),
-				html.P("Community Health Status Indicator to Combat Obesity, Heart Disease and Cancer"),
-				html.P("https://catalog.data.gov/dataset/community-health-status-indicators-chsi-to-combat-obesity-heart-disease-and-cancer")
+				html.P("Source: U.S. Department of Health & Human Services",
+						style={'margin-top':'5rem', 'margin-bottom':'0rem'}),
+				html.P("Community Health Status Indicator to Combat Obesity, Heart Disease and Cancer",
+						style={'margin-top':'0rem', 'margin-bottom':'0rem'}),
+				html.P("https://catalog.data.gov/dataset/community-health-status-indicators-chsi-to-combat-obesity-heart-disease-and-cancer",
+						style={'margin-top':'0rem', 'margin-bottom':'0rem'})
 			])
 		], style = {'width': '48%', 'display':'inline-block'}),
 		# right plot with radio items and slider
