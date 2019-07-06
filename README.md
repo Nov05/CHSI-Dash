@@ -24,7 +24,7 @@ Metadata Updated: June 3, 2019
 ## :point_right: Our Teamwork
 
 ### 【Deployment and Dash】by @leehanchung  
-To run a local development server, at root root directory:  
+To run a local development server, at root directory:  
 ```[pipenv run] python app.py```  
 To deploy on Heroku, git add and commit, then do:  
 ```git push heroku master```  
