@@ -49,4 +49,7 @@ https://ezgif.com/video-to-gif
 2019-07-01 Project created  
 2019-07-05 Project finished
 
+## :point_right: Others
 
+2019-07-05 Deployment Logs  
+https://github.com/Nov05/CHSI-Dash-deploy  
