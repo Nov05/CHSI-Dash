@@ -5,7 +5,7 @@
 ## :point_right: Dash App deployed on Heroku 
 
 Python Plotly App Visualization for CHSI Dataset  
-"Life, Death & Poverty" https://tragically-eh-20397.herokuapp.com/  
+**"Life, Death & Poverty"** https://tragically-eh-20397.herokuapp.com/  
 3D Scatter only http://dash-app-chsi.herokuapp.com/   
 
 Watch the demo video  
