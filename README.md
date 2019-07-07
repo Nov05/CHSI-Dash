@@ -53,9 +53,9 @@ https://ezgif.com/video-to-gif
 
 ## :point_right: Others
 
-2019-07-05 Deployment Logs  
-https://github.com/Nov05/CHSI-Dash-deploy  
 2019-06-29 Run Plotly Online or Offline in Colab  
 https://colab.research.google.com/drive/1oijny-_J2K-7ma6jNq9jAp7C_tzNB27W  
 2019-06-29 Plotly Express and Dash Examples  
 https://colab.research.google.com/drive/1qQPYu4GC0HeiNqLR2kJ1w4C4IGfu0ezI  
+2019-07-05 Deployment Logs  
+https://github.com/Nov05/CHSI-Dash-deploy   
