@@ -6,8 +6,10 @@
 
 Python Plotly App Visualization for CHSI Dataset  
 
-**【Life, Death & Poverty】** https://tragically-eh-20397.herokuapp.com/  
-3D Scatter only http://dash-app-chsi.herokuapp.com/   
+**【Life, Death & Poverty】**  
+https://tragically-eh-20397.herokuapp.com/  
+3D Scatter only   
+http://dash-app-chsi.herokuapp.com/   
 
 Watch the demo video  
 https://youtu.be/5UCsV16RPs0  
